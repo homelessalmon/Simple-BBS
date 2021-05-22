@@ -10,6 +10,7 @@ class Post
 class Board
 {
   Post post;
-  int permission
+  int permission;
+  string board_name;
 };
 
