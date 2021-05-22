@@ -9,7 +9,7 @@ class Post
 };
 class Board
 {
-  Post post;
+  vector<int> post_id;
   int permission;
   string board_name;
 };
