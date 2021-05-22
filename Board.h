@@ -3,8 +3,8 @@
 #include<vector>
 class Post
 {
-  string title;
-  string content;
+  vector<string> title;
+  vector<string> string content;
   vector<string> comment;
 };
 class Board
