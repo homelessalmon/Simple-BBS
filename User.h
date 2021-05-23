@@ -1,10 +1,37 @@
 #pragma once
 #include <vector>
+#include<fstream>
+#include<string>
+
+using namespace std;
 
 class User
 {
-	vector <int> postsID;	// ¬ö¿ı«Ø¥ß¹Lªºpost
-	int Permission_level;	// Åv­­µ¥¯Å
-	// Other infos, e.x. comment_nums, post_num, ¡K.
+public:
+	vector <int> postsID;	// ç´€éŒ„å»ºç«‹éçš„post
+	int Permission_level = -1;	// æ¬Šé™ç­‰ç´š
+	// Other infos, e.x. comment_nums, post_num, â€¦.
 
+	User(){}
+
+};
+
+class Adiministrator : public User
+{
+public:
+	Adiministrator(string user_name, string user_password);
+	void add_board();
+	void add_post();
+};
+
+class Member : public User
+{
+public:
+	Member(string user_name, string user_password);
+	void add_post();
+};
+
+class Guest : public User
+{
+public:
 };
