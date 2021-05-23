@@ -24,5 +24,6 @@ class BoardManager
 
     BoardState state;
     Viewer viewer;
-
+    
+    void load();
 };
