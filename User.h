@@ -15,7 +15,12 @@ public:
 
 	User(){}
 	virtual void add_board(string board_name) { return; }
+	//virtual void edit_board();
+	//virtual void remove_board();
+
 	virtual void add_post(int current_board) { return; }
+	//virtual void edit_post();
+	//virtual void remove_post();
 	
 
 };
@@ -24,6 +29,7 @@ class Adiministrator : public User
 {
 public:
 	Adiministrator(string user_name, string user_password);
+	Adiministrator(vector<int> _postsID, int _user_id);
 	void add_board(string board_name);
 	void add_post(int current_board);
 };
@@ -32,6 +38,7 @@ class Member : public User
 {
 public:
 	Member(string user_name, string user_password);
+	Member(vector<int> _postsID, int _user_id);
 	virtual void add_post(int current_board);
 };
 
