@@ -14,6 +14,9 @@ public:
 	// Other infos, e.x. comment_nums, post_num, ….
 
 	User(){}
+	virtual void add_board(string board_name) { return; }
+	virtual void add_post(int current_board) { return; }
+	
 
 };
 
@@ -21,7 +24,7 @@ class Adiministrator : public User
 {
 public:
 	Adiministrator(string user_name, string user_password);
-	void add_board();
+	void add_board(string board_name);
 	void add_post(int current_board);
 };
 
@@ -29,7 +32,7 @@ class Member : public User
 {
 public:
 	Member(string user_name, string user_password);
-	void add_post(int current_board);
+	virtual void add_post(int current_board);
 };
 
 class Guest : public User
