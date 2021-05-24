@@ -1,1 +1,56 @@
 #include "BoardManager.h"
+
+void BoardManager::load_user()
+{
+	ifstream fin("users/count.txt");
+	int user_count; fin >> user_count; fin.close();
+
+	users.clear();
+
+	for (int i = 0; i < user_count + 1; i++)
+	{
+		fin.open("users/" + to_string(i) + ".txt");
+		if (fin.is_open())
+		{
+			string u_name, u_password; int u_id, u_permission, tmp ; vector<int> u_post_id;
+			fin >> u_name >> u_password >> u_id >> u_permission;
+			while (fin >> tmp) { u_post_id.push_back(tmp); }
+			if (u_permission == 2)
+			{
+				Adiministrator* tmp2 = new Adiministrator(u_post_id, u_id);
+				users.push_back(tmp2);
+			}
+			else
+			{
+				Member* tmp2=new Member(u_post_id, u_id);
+				users.push_back(tmp2);
+			}
+			u_post_id.clear();
+		}
+		fin.close();
+	}
+}
+
+void BoardManager::load_board()
+{
+	ifstream fin("boards/count.txt");
+	int board_count; fin >> board_count; fin.close();
+
+	boards.clear();
+
+	for (int i = 0; i < board_count; i++)
+	{
+		fin.open("boards/" + to_string(i) + ".txt");
+		if (fin.is_open())
+		{
+			string _board_name; int tmp; vector<int> post_id;
+			fin >> _board_name;
+			while (fin >> tmp) { post_id.push_back(tmp); }
+
+			Board* tmp2 = new Board(post_id, _board_name);
+			boards.push_back(*(tmp2));
+			post_id.clear();
+		}
+		fin.close();
+	}
+}
