@@ -21,6 +21,7 @@ public:
     vector <Board> boards;
     int current_user;
     int current_board;
+    int current_post;
 
     BoardState state;
     Viewer viewer;
