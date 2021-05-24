@@ -25,5 +25,6 @@ public:
     BoardState state;
     Viewer viewer;
 
-    void load();
+    void load_user();
+    void load_board();
 };
