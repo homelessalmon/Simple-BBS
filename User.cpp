@@ -16,6 +16,13 @@ Adiministrator::Adiministrator(string user_name, string user_password)
 	fout.flush(); fout.close();
 }
 
+Adiministrator::Adiministrator(vector<int> _postsID, int _user_id)
+{
+	postsID = _postsID;
+	user_id = _user_id;
+	Permission_level = 2;
+}
+
 void Adiministrator::add_board(string board_name)
 {
 	ifstream fin("boards/count.txt");
@@ -68,6 +75,13 @@ Member::Member(string user_name, string user_password)
 	fout.open("users/" + to_string(count + 1) + ".txt", ios::out || ios::trunc);
 	fout << user_name << endl << user_password << endl << user_id << endl << 1 << endl;
 	fout.flush(); fout.close();
+}
+
+Member::Member(vector<int> _postsID, int _user_id)
+{
+	postsID = _postsID;
+	user_id = _user_id;
+	Permission_level = 1;
 }
 
 void Member::add_post(int current_board)
