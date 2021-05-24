@@ -16,6 +16,45 @@ Adiministrator::Adiministrator(string user_name, string user_password)
 	fout.flush(); fout.close();
 }
 
+void Adiministrator::add_board(string board_name)
+{
+	ifstream fin("boards/count.txt");
+	int count; fin >> count; fin.close();
+
+	ofstream fout("boards/count.txt", ios::out || ios::trunc);
+	fout << count + 1; fout.close();
+
+	system(("cd.>boards/" + to_string(count) + ".txt").c_str());
+
+	fout.open("boards/" + to_string(count) + ".txt", ios::trunc || ios::out);
+	fout << board_name << endl;
+	fout.close();
+}
+
+void Adiministrator::add_post(int current_board)
+{
+	ifstream fin("posts/count.txt");
+	int count; fin >> count; fin.close();
+
+	ofstream fout("posts/count.txt", ios::out || ios::trunc);
+	fout << count + 1; fout.close();
+
+	system(("cd.>posts/" + to_string(count) + "title.txt").c_str());
+	system(("posts\\" + to_string(count) + "title.txt").c_str());
+
+	system(("cd.>posts/" + to_string(count) + "content.txt").c_str());
+	system(("posts\\" + to_string(count) + "content.txt").c_str());
+
+	system(("cd.>posts/" + to_string(count) + "comment.txt").c_str());
+
+	fout.open("users/" + to_string(user_id) + ".txt", ios::app);
+	fout << count << endl; fout.close();
+
+	fout.open("boards/" + to_string(current_board) + ".txt", ios::app);
+	fout << count << endl; fout.close();
+	
+}
+
 Member::Member(string user_name, string user_password)
 {
 	ifstream fin("users/count.txt");
@@ -29,4 +68,27 @@ Member::Member(string user_name, string user_password)
 	fout.open("users/" + to_string(count + 1) + ".txt", ios::out || ios::trunc);
 	fout << user_name << endl << user_password << endl << user_id << endl << 1 << endl;
 	fout.flush(); fout.close();
+}
+
+void Member::add_post(int current_board)
+{
+	ifstream fin("posts/count.txt");
+	int count; fin >> count; fin.close();
+
+	ofstream fout("posts/count.txt", ios::out || ios::trunc);
+	fout << count + 1; fout.close();
+
+	system(("cd.>posts/" + to_string(count) + "title.txt").c_str());
+	system(("posts\\" + to_string(count) + "title.txt").c_str());
+
+	system(("cd.>posts/" + to_string(count) + "content.txt").c_str());
+	system(("posts\\" + to_string(count) + "content.txt").c_str());
+
+	system(("cd.>posts/" + to_string(count) + "comment.txt").c_str());
+
+	fout.open("users/" + to_string(user_id) + ".txt", ios::app);
+	fout << count << endl; fout.close();
+
+	fout.open("boards/" + to_string(current_board) + ".txt", ios::app);
+	fout << count << endl; fout.close();
 }
