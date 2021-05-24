@@ -16,5 +16,6 @@ class Board
 public:
   vector<int> post_id;
   string board_name;
-};
 
+  Board(vector<int> _post_id, string board_name);
+};
