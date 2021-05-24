@@ -1,6 +1,4 @@
 #pragma once
-#include <iostream>
-#include <vector>
 #include "Board.h"
 #include "User.h"
 #include "Viewer.h"
@@ -18,12 +16,14 @@ enum BoardState
 
 class BoardManager
 {
+public:
     vector <User*> users;
     vector <Board> boards;
     int current_user;
+    int current_board;
 
     BoardState state;
     Viewer viewer;
-    
+
     void load();
 };
