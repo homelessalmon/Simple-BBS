@@ -38,6 +38,43 @@ void Adiministrator::add_board(string board_name)
 	fout.close();
 }
 
+void Adiministrator::edit_board(int board_id, string new_name)
+{
+	ifstream fin("boards/" + to_string(board_id) + ".txt");
+	if (fin.is_open())
+	{
+		vector<int> _post_list; string tmp1; int tmp2;
+		fin >> tmp1;
+		while (fin >> tmp2)
+		{
+			_post_list.push_back(tmp2);
+		}
+
+		ofstream fout("boards/" + to_string(board_id) + ".txt", ios::trunc);
+		if (fout.is_open())
+		{
+			fout << new_name << endl;
+			for (int i = 0; i < _post_list.size(); i++)
+			{
+				fout << _post_list[i] << endl;
+			}
+		}
+		fout.close();
+	}
+	fin.close();
+	
+}
+
+void Adiministrator::remove_board(int board_id)
+{
+	ifstream fin("board/" + to_string(board_id) + ".txt");
+	if (fin.is_open())
+	{
+		fin.close();
+		system(("del board\\" + to_string(board_id) + ".txt").c_str());
+	}
+}
+
 void Adiministrator::add_post(int current_board)
 {
 	ifstream fin("posts/count.txt");
@@ -60,6 +97,32 @@ void Adiministrator::add_post(int current_board)
 	fout.open("boards/" + to_string(current_board) + ".txt", ios::app);
 	fout << count << endl; fout.close();
 	
+}
+
+void Adiministrator::edit_post(int post_id, int part_select)
+{
+	switch (part_select)
+	{
+	case 0:
+		system(("posts\\" + to_string(post_id) + "title.txt").c_str());
+		break;
+	case 1:
+		system(("posts\\" + to_string(post_id) + "content.txt").c_str());
+		break;
+	default:
+		break;
+	}
+}
+
+void Adiministrator::remove_post(int post_id)
+{
+	ifstream fin("posts/" + to_string(post_id) + "title.txt");
+	if (fin.is_open())
+	{
+		system(("del post\\" + to_string(post_id) + "title.txt").c_str());
+		system(("del post\\" + to_string(post_id) + "content.txt").c_str());
+		system(("del post\\" + to_string(post_id) + "comment.txt").c_str());
+	}
 }
 
 Member::Member(string user_name, string user_password)
@@ -105,4 +168,30 @@ void Member::add_post(int current_board)
 
 	fout.open("boards/" + to_string(current_board) + ".txt", ios::app);
 	fout << count << endl; fout.close();
+}
+
+void Member::edit_post(int post_id, int part_select)
+{
+	switch (part_select)
+	{
+	case 0:
+		system(("posts\\" + to_string(post_id) + "title.txt").c_str());
+		break;
+	case 1:
+		system(("posts\\" + to_string(post_id) + "content.txt").c_str());
+		break;
+	default:
+		break;
+	}
+}
+
+void Member::remove_post(int post_id)
+{
+	ifstream fin("posts/" + to_string(post_id) + "title.txt");
+	if (fin.is_open())
+	{
+		system(("del post\\" + to_string(post_id) + "title.txt").c_str());
+		system(("del post\\" + to_string(post_id) + "content.txt").c_str());
+		system(("del post\\" + to_string(post_id) + "comment.txt").c_str());
+	}
 }
