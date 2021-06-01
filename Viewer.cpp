@@ -25,9 +25,9 @@ int Viewer::login(string& username, string& password)
     cout << " |_| \\___/ \\__,  ||_||_| |_|" << endl;
     cout << "           |___ /\n" << endl;
     cout << "Back to menu: 0\n>";
-    int n;
+    char n;
     cin >> n;
-    if (n == 0) return 0;
+    if (n == '0') return 0;
 
     system("cls");
     cout << "  _                _" << endl;
@@ -73,9 +73,9 @@ int Viewer::signup(string& username, string& password)
     cout << "           __/ |                 | |    " << endl;
     cout << "          |___/                  |_|    \n" << endl;
     cout << "Back to menu: 0\n>";
-    int n;
+    char n;
     cin >> n;
-    if (n == 0) return 0;
+    if (n == '0') return 0;
 
     system("cls");
     cout << "       _                                " << endl;
