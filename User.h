@@ -16,11 +16,11 @@ public:
 	User(){}
 	virtual void add_board(string board_name) { return; }
 	virtual void edit_board(int board_id, string new_name) { return; }
-	virtual void remove_board(int board_id) { return; }
+	virtual void remove_board(int board_id, string reason) { return; }
 
 	virtual void add_post(int current_board) { return; }
 	virtual void edit_post(int post_id,int part_select) { return; }
-	virtual void remove_post(int post_id) { return; }
+	virtual void remove_post(int post_id, string reason) { return; }
 	
 
 };
@@ -32,10 +32,10 @@ public:
 	Adiministrator(vector<int> _postsID, int _user_id);
 	void add_board(string board_name);
 	void edit_board(int board_id, string new_name);
-	void remove_board(int board_id);
+	void remove_board(int board_id, string reason);
 	void add_post(int current_board);
 	void edit_post(int post_id, int part_select);//0 title,1 content.
-	void remove_post(int post_id);
+	void remove_post(int post_id, string reason);
 };
 
 class Member : public User
@@ -45,7 +45,7 @@ public:
 	Member(vector<int> _postsID, int _user_id);
 	virtual void add_post(int current_board);
 	void edit_post(int post_id, int part_select);
-	void remove_post(int post_id);
+	void remove_post(int post_id, string reason);
 };
 
 class Guest : public User
