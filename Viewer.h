@@ -10,6 +10,6 @@ class Viewer
 {
 public:
 	int menu();
-	void login(string&, string&);
-	void signup(string&, string&);
+	int login(string&, string&);
+	int signup(string&, string&);
 };
