@@ -28,6 +28,7 @@ int Viewer::login(string& username, string& password)
     char n;
     cin >> n;
     if (n == '0') return 0;
+    while ((n = getchar()) != '\n'); //clear the buffer
 
     system("cls");
     cout << "  _                _" << endl;
@@ -76,6 +77,7 @@ int Viewer::signup(string& username, string& password)
     char n;
     cin >> n;
     if (n == '0') return 0;
+    while ((n = getchar()) != '\n'); //clear the buffer
 
     system("cls");
     cout << "       _                                " << endl;
