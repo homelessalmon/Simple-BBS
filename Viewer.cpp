@@ -16,7 +16,7 @@ int Viewer::menu()
     return n;
 }
 
-void Viewer::login(string& username, string& password)
+int Viewer::login(string& username, string& password)
 {
     cout << "  _                _" << endl;
     cout << " | |  ___    __ _ (_) _ __" << endl;
@@ -27,7 +27,7 @@ void Viewer::login(string& username, string& password)
     cout << "Back to menu: 0\n>";
     int n;
     cin >> n;
-    if (n == 0) return;
+    if (n == 0) return 0;
 
     system("cls");
     cout << "  _                _" << endl;
@@ -59,9 +59,10 @@ void Viewer::login(string& username, string& password)
         }
     }
     password = pass;
+    return 1;
 }
 
-void Viewer::signup(string& username, string& password)
+int Viewer::signup(string& username, string& password)
 {
     cout << "       _                                " << endl;
     cout << "      (_)                               " << endl;
@@ -74,7 +75,7 @@ void Viewer::signup(string& username, string& password)
     cout << "Back to menu: 0\n>";
     int n;
     cin >> n;
-    if (n == 0) return;
+    if (n == 0) return 0;
 
     system("cls");
     cout << "       _                                " << endl;
@@ -108,4 +109,5 @@ void Viewer::signup(string& username, string& password)
         }
     }
     password = pass;
+    return 1;
 }
