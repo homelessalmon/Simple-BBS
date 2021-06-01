@@ -1,16 +1,29 @@
 #include "Viewer.h"
 
+int Viewer::menu()
+{
+    
+    cout << "1. Log in" << endl;
+    cout << "2. Sign up" << endl;
+    cout << "3. Guest" << endl;
+    cout << "0. Exit" << endl;
+    cout << ">";
+    int n;
+    cin >> n;
+    return n;
+}
+
 void Viewer::login(string& username, string& password)
 {
-	cout << "  _                _" << endl;
-	cout << " | |  ___    __ _ (_) _ __" << endl;
-	cout << " | | / _ \\ /  _  || ||  _ \\" << endl;
-	cout << " | || (_) || (_| || || | | |" << endl;
-	cout << " |_| \\___/ \\__,  ||_||_| |_|" << endl;
-	cout << "           |___ /" << endl;
-	cout << "\nUsername: ";
-	cin >> username;
-	cout << "Password: ";
+    cout << "  _                _" << endl;
+    cout << " | |  ___    __ _ (_) _ __" << endl;
+    cout << " | | / _ \\ /  _  || ||  _ \\" << endl;
+    cout << " | || (_) || (_| || || | | |" << endl;
+    cout << " |_| \\___/ \\__,  ||_||_| |_|" << endl;
+    cout << "           |___ /" << endl;
+    cout << "\nUsername: ";
+    cin >> username;
+    cout << "Password: ";
     char pass[32];
     char tmp;
     int i = 0;
@@ -31,4 +44,9 @@ void Viewer::login(string& username, string& password)
         }
     }
     password = pass;
+}
+
+void signup(string& username, string& password)
+{
+
 }
