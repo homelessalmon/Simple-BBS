@@ -65,14 +65,14 @@ void Adiministrator::edit_board(int board_id, string new_name)
 	
 }
 
-void Adiministrator::remove_board(int board_id)
+void Adiministrator::remove_board(int board_id, string reason)
 {
-	ifstream fin("board/" + to_string(board_id) + ".txt");
-	if (fin.is_open())
+	ofstream fout("board/" + to_string(board_id) + ".txt", ios::trunc);
+	if (fout.is_open())
 	{
-		fin.close();
-		system(("del board\\" + to_string(board_id) + ".txt").c_str());
+		fout << "###Sorry this board has been removed due to " << reason;
 	}
+	fout.close();
 }
 
 void Adiministrator::add_post(int current_board)
@@ -114,15 +114,24 @@ void Adiministrator::edit_post(int post_id, int part_select)
 	}
 }
 
-void Adiministrator::remove_post(int post_id)
+void Adiministrator::remove_post(int post_id, string reason)
 {
-	ifstream fin("posts/" + to_string(post_id) + "title.txt");
-	if (fin.is_open())
+	ofstream fout("posts/" + to_string(post_id) + "title.txt", ios::trunc);
+	if (fout.is_open())
 	{
-		system(("del post\\" + to_string(post_id) + "title.txt").c_str());
-		system(("del post\\" + to_string(post_id) + "content.txt").c_str());
-		system(("del post\\" + to_string(post_id) + "comment.txt").c_str());
+		fout << "###Sorry this post has been removed.";
 	}
+	fout.close();
+
+	fout.open("posts/" + to_string(post_id) + "content.txt", ios::trunc);
+	if (fout.is_open())
+	{
+		fout << "Sorry this post has been removed." << endl;
+		fout << "Due to " << reason;
+	}
+	fout.close();
+	fout.open("posts/" + to_string(post_id) + "comment.txt", ios::trunc);
+	fout.close();
 }
 
 Member::Member(string user_name, string user_password)
@@ -185,13 +194,22 @@ void Member::edit_post(int post_id, int part_select)
 	}
 }
 
-void Member::remove_post(int post_id)
+void Member::remove_post(int post_id, string reason)
 {
-	ifstream fin("posts/" + to_string(post_id) + "title.txt");
-	if (fin.is_open())
+	ofstream fout("posts/" + to_string(post_id) + "title.txt", ios::trunc);
+	if (fout.is_open())
 	{
-		system(("del post\\" + to_string(post_id) + "title.txt").c_str());
-		system(("del post\\" + to_string(post_id) + "content.txt").c_str());
-		system(("del post\\" + to_string(post_id) + "comment.txt").c_str());
+		fout << "###Sorry this post has been removed.";
 	}
+	fout.close();
+
+	fout.open("posts/" + to_string(post_id) + "content.txt", ios::trunc);
+	if (fout.is_open())
+	{
+		fout << "Sorry this post has been removed." << endl;
+		fout << "Due to " << reason;
+	}
+	fout.close();
+	fout.open("posts/" + to_string(post_id) + "comment.txt", ios::trunc);
+	fout.close();
 }
