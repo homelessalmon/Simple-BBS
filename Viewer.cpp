@@ -29,6 +29,13 @@ void Viewer::login(string& username, string& password)
     cin >> n;
     if (n == 0) return;
 
+    system("cls");
+    cout << "  _                _" << endl;
+    cout << " | |  ___    __ _ (_) _ __" << endl;
+    cout << " | | / _ \\ /  _  || ||  _ \\" << endl;
+    cout << " | || (_) || (_| || || | | |" << endl;
+    cout << " |_| \\___/ \\__,  ||_||_| |_|" << endl;
+    cout << "           |___ /\n" << endl;
     cout << "Username: ";
     cin >> username;
     cout << "Password: ";
@@ -69,6 +76,15 @@ void Viewer::signup(string& username, string& password)
     cin >> n;
     if (n == 0) return;
 
+    system("cls");
+    cout << "       _                                " << endl;
+    cout << "      (_)                               " << endl;
+    cout << "  ___  _   __ _  _ __      _   _  _ __  " << endl;
+    cout << " / __|| | / _` || '_ \\    | | | || '_ \\ " << endl;
+    cout << " \\__ \\| || (_| || | | |   | |_| || |_) |" << endl;
+    cout << " |___/|_| \\__, ||_| |_|    \\__,_|| .__/ " << endl;
+    cout << "           __/ |                 | |    " << endl;
+    cout << "          |___/                  |_|    \n" << endl; 
     cout << "Username: ";
     cin >> username;
     cout << "Password: ";
