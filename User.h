@@ -2,6 +2,7 @@
 #include <vector>
 #include<fstream>
 #include<string>
+#include"Board.h"
 
 using namespace std;
 
@@ -22,6 +23,8 @@ public:
 	virtual void edit_post(int post_id,int part_select) { return; }
 	virtual void remove_post(int post_id, string reason) { return; }
 	
+	virtual void add_comment(int post_id, int current_userID, string text) { return; }
+	virtual void remove_comment(int post_id, int order, string reason) { return; }//order是從頭開始數來第幾個comment,0開始
 
 };
 
@@ -30,12 +33,17 @@ class Adiministrator : public User
 public:
 	Adiministrator(string user_name, string user_password);
 	Adiministrator(vector<int> _postsID, int _user_id);
+
 	void add_board(string board_name);
 	void edit_board(int board_id, string new_name);
 	void remove_board(int board_id, string reason);
+
 	void add_post(int current_board);
 	void edit_post(int post_id, int part_select);//0 title,1 content.
 	void remove_post(int post_id, string reason);
+
+	void add_comment(int post_id, int current_userID, string text);
+	void remove_comment(int post_id, int order, string reason);
 };
 
 class Member : public User
@@ -43,9 +51,12 @@ class Member : public User
 public:
 	Member(string user_name, string user_password);
 	Member(vector<int> _postsID, int _user_id);
-	virtual void add_post(int current_board);
+
+	void add_post(int current_board);
 	void edit_post(int post_id, int part_select);
 	void remove_post(int post_id, string reason);
+
+	void add_comment(int post_id, int current_userID, string text);
 };
 
 class Guest : public User
