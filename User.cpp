@@ -70,7 +70,7 @@ void Adiministrator::remove_board(int board_id, string reason)
 	ofstream fout("board/" + to_string(board_id) + ".txt", ios::trunc);
 	if (fout.is_open())
 	{
-		fout << "###Sorry this board has been removed due to " << reason;
+		fout << REMOVE << endl << reason;
 	}
 	fout.close();
 }
@@ -119,7 +119,7 @@ void Adiministrator::remove_post(int post_id, string reason)
 	ofstream fout("posts/" + to_string(post_id) + "title.txt", ios::trunc);
 	if (fout.is_open())
 	{
-		fout << "###Sorry this post has been removed.";
+		fout << REMOVE << endl;
 	}
 	fout.close();
 
@@ -131,6 +131,39 @@ void Adiministrator::remove_post(int post_id, string reason)
 	}
 	fout.close();
 	fout.open("posts/" + to_string(post_id) + "comment.txt", ios::trunc);
+	fout.close();
+}
+
+void Adiministrator::add_comment(int post_id, int current_userID, string text)
+{
+	string name;
+
+	ifstream fin("users/" + to_string(current_userID) + ".txt");
+	if (fin.is_open())fin >> name;
+	fin.close();
+
+	ofstream fout("posts/" + to_string(post_id) + "comment.txt", ios::app);
+	fout << name + " " + text << endl;
+	fout.close();
+}
+
+void Adiministrator::remove_comment(int post_id, int order, string reason)
+{
+	vector<string> list;
+	string tmp;
+	ifstream fin("posts/" + to_string(post_id) + "comment.txt");
+	while (getline(fin, tmp)) { list.push_back(tmp); }
+
+	if (order < list.size())
+	{
+		list[order] = REMOVE + " " + reason;
+	}
+
+	ofstream fout("posts/" + to_string(post_id) + "comment.txt", ios::trunc);
+	for (int i = 0; i < list.size(); i++)
+	{
+		fout << list[i] << endl;
+	}
 	fout.close();
 }
 
@@ -199,7 +232,7 @@ void Member::remove_post(int post_id, string reason)
 	ofstream fout("posts/" + to_string(post_id) + "title.txt", ios::trunc);
 	if (fout.is_open())
 	{
-		fout << "###Sorry this post has been removed.";
+		fout << REMOVE << endl;
 	}
 	fout.close();
 
@@ -211,5 +244,18 @@ void Member::remove_post(int post_id, string reason)
 	}
 	fout.close();
 	fout.open("posts/" + to_string(post_id) + "comment.txt", ios::trunc);
+	fout.close();
+}
+
+void Member::add_comment(int post_id, int current_userID, string text)
+{
+	string name;
+
+	ifstream fin("users/" + to_string(current_userID) + ".txt");
+	if (fin.is_open())fin >> name;
+	fin.close();
+
+	ofstream fout("posts/" + to_string(post_id) + "comment.txt", ios::app);
+	fout << name + " " + text << endl;
 	fout.close();
 }
