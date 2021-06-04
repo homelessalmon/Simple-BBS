@@ -45,11 +45,22 @@ void BoardManager::load_board()
 		{
 			string _board_name; int tmp; vector<int> post_id;
 			fin >> _board_name;
-			while (fin >> tmp) { post_id.push_back(tmp); }
+			if (_board_name != REMOVE)
+			{
+				while (fin >> tmp) { post_id.push_back(tmp); }
 
-			Board* tmp2 = new Board(post_id, _board_name);
-			boards.push_back(*(tmp2));
-			post_id.clear();
+				Board* tmp2 = new Board(post_id, _board_name);
+				boards.push_back(*(tmp2));
+				post_id.clear();
+			}
+			else
+			{
+				fin >> _board_name;
+				Board* tmp2 = new Board(post_id, _board_name);
+				tmp2->is_removed = true;
+				boards.push_back(*(tmp2));
+				post_id.clear();
+			}
 		}
 		fin.close();
 	}
