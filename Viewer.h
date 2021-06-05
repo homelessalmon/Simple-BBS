@@ -18,16 +18,18 @@ public:
 	int signup(string&, string&, int check); //0.back to menu; 1.end successfully //check: -1.Username existed;
 	void mailbox();
 	int board_select(vector<Board>, int permission_lv); //-1.back; -2.logout; -3.add board(admin); -4.del board(admin); 0~n.board ID
+	string board_add();
+	int board_delete(vector<Board>); // -1.back(no delete); 0~n.board to be deleted
 	int post_select(Board); //-1.back; -2.logout; 0~n.post ID
-	void view_post();
-	void view_comment();
+	int view_post();
+	int view_comment();
+	string leave_comment();
 };
 
 class Button
 {
 public:
 	bool buttonOn;
-	Button() { };
 	Button(string t, sf::Vector2f size, int charSize, sf::Color bgColor, sf::Color textColor) {
 		text.setString(t);
 		text.setFillColor(textColor);
