@@ -1,4 +1,5 @@
 #include "Viewer.h"
+#define DEBUG 0
 
 int Viewer::menu1()
 {
@@ -119,16 +120,16 @@ int Viewer::signup(string& username, string& password, int check)
 
 int Viewer::menu2()
 {
+    sf::RenderWindow window(sf::VideoMode(700, 800), "Welcome!", sf::Style::Default ^ sf::Style::Resize);
     sf::Font font;
     font.loadFromFile("consola.ttf");
+
     sf::Text title;
     title.setFont(font);
     title.setFillColor(sf::Color::Red);
     title.setCharacterSize(100);
     title.setString("BBS");
     title.setPosition({ 255, 50 });
-
-    sf::RenderWindow window(sf::VideoMode(700, 800), "Welcome!", sf::Style::Default ^ sf::Style::Resize);
 
     Button board("View Boards", { 400, 70 }, 50, sf::Color::Black, sf::Color::White);
     board.setFont(font);
@@ -186,6 +187,542 @@ int Viewer::menu2()
         board.drawTo(window);
         mailbox.drawTo(window);
         logout.drawTo(window);
+        window.draw(title);
+        window.display();
+    }
+}
+
+int Viewer::board_select(vector<Board> boards, int permission_lv)
+{
+    sf::RenderWindow window(sf::VideoMode(700, 800), "Boards", sf::Style::Default ^ sf::Style::Resize);
+    sf::Font font;
+    font.loadFromFile("consola.ttf");
+
+    sf::Text title;
+    title.setFont(font);
+    title.setFillColor(sf::Color::Red);
+    title.setCharacterSize(50);
+    title.setString("Boards");
+    title.setPosition({40, 30});
+    
+    //boards
+    int current = 0;
+    int board_amount = boards.size();
+    //bool btnOn[8] = { true, true, true, true, true, true, true, true };
+    vector<Button>board_btn;
+    for (int i = 0; i < 8; i++) {
+        if (i < board_amount) {
+            Button btn(boards[i].board_name, { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
+            board_btn.push_back(btn);
+            board_btn[i].setFont(font);
+            board_btn[i].setPos({ 20, (float)(130 + (70 * i)) });
+        }
+        else if (i >= board_amount) {
+            Button btn("", { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
+            board_btn.push_back(btn);
+            board_btn[i].setFont(font);
+            board_btn[i].setPos({ 20, (float)(130 + (70 * i)) });
+            board_btn[i].btnOff();
+        }
+    }
+    //functional buttons
+    Button back("Back", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    back.setFont(font);
+    back.setPos({ 50, 730 });
+    Button logout("Logout", { 100, 40 }, 24, sf::Color::White, sf::Color::Black);
+    logout.setFont(font);
+    logout.setPos({ 180, 730 });
+    Button prev("<<Prev", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    prev.setFont(font);
+    prev.setPos({ 420, 730 });
+    Button next("Next>>", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    next.setFont(font);
+    next.setPos({ 550, 730 });
+    Button add_board("Add", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    add_board.setFont(font);
+    add_board.setPos({ 420, 40 });
+    Button del_board("Delete", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    del_board.setFont(font);
+    del_board.setPos({ 550, 40 });
+    if (permission_lv != 2) {
+        add_board.btnOff();
+        del_board.btnOff();
+    }
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+            case sf::Event::Closed:
+                window.close();
+                break;
+            case sf::Event::MouseMoved:
+                if (board_btn[0].buttonOn && board_btn[0].isMouseOver(window)) {
+                    board_btn[0].setBgColor(sf::Color::White);
+                    board_btn[0].setTxtColor(sf::Color::Black);
+                }
+                else if (board_btn[1].buttonOn && board_btn[1].isMouseOver(window)) {
+                    board_btn[1].setBgColor(sf::Color::White);
+                    board_btn[1].setTxtColor(sf::Color::Black);
+                }
+                else if (board_btn[2].buttonOn && board_btn[2].isMouseOver(window)) {
+                    board_btn[2].setBgColor(sf::Color::White);
+                    board_btn[2].setTxtColor(sf::Color::Black);
+                }
+                else if (board_btn[3].buttonOn && board_btn[3].isMouseOver(window)) {
+                    board_btn[3].setBgColor(sf::Color::White);
+                    board_btn[3].setTxtColor(sf::Color::Black);
+                }
+                else if (board_btn[4].buttonOn && board_btn[4].isMouseOver(window)) {
+                    board_btn[4].setBgColor(sf::Color::White);
+                    board_btn[4].setTxtColor(sf::Color::Black);
+                }
+                else if (board_btn[5].buttonOn && board_btn[5].isMouseOver(window)) {
+                    board_btn[5].setBgColor(sf::Color::White);
+                    board_btn[5].setTxtColor(sf::Color::Black);
+                }
+                else if (board_btn[6].buttonOn && board_btn[6].isMouseOver(window)) {
+                    board_btn[6].setBgColor(sf::Color::White);
+                    board_btn[6].setTxtColor(sf::Color::Black);
+                }
+                else if (board_btn[7].buttonOn && board_btn[7].isMouseOver(window)) {
+                    board_btn[7].setBgColor(sf::Color::White);
+                    board_btn[7].setTxtColor(sf::Color::Black);
+                }
+                else if (back.isMouseOver(window)) {
+                    back.setBgColor(sf::Color::Red);
+                    back.setTxtColor(sf::Color::White);
+                }
+                else if (logout.isMouseOver(window)) {
+                    logout.setBgColor(sf::Color::Blue);
+                    logout.setTxtColor(sf::Color::White);
+                }
+                else if (prev.isMouseOver(window)) {
+                    prev.setBgColor(sf::Color::Yellow);
+                }
+                else if (next.isMouseOver(window)) {
+                    next.setBgColor(sf::Color::Yellow);
+                }
+                else if (add_board.buttonOn && add_board.isMouseOver(window)) {
+                    add_board.setBgColor(sf::Color::Green);
+                }
+                else if (del_board.buttonOn && del_board.isMouseOver(window)) {
+                    del_board.setBgColor(sf::Color::Red);
+                    del_board.setTxtColor(sf::Color::White);
+                }
+                else {
+                    for (int i = 0; i < 8; i++) {
+                        board_btn[i].setBgColor(sf::Color::Black);
+                        board_btn[i].setTxtColor(sf::Color::White);
+                    }
+                    back.setBgColor(sf::Color::White);
+                    back.setTxtColor(sf::Color::Black);
+                    logout.setBgColor(sf::Color::White);
+                    logout.setTxtColor(sf::Color::Black);
+                    prev.setBgColor(sf::Color::White);
+                    next.setBgColor(sf::Color::White);
+                    add_board.setBgColor(sf::Color::White);
+                    del_board.setBgColor(sf::Color::White);
+                    del_board.setTxtColor(sf::Color::Black);
+                }
+                break;
+            case sf::Event::MouseButtonPressed:
+#if DEBUG
+                if (board_btn[0].buttonOn && board_btn[0].isMouseOver(window)) {
+                    cout << "Board " << current << endl;
+                }
+                if (board_btn[1].buttonOn && board_btn[1].isMouseOver(window)) {
+                    cout << "Board " << current + 1 << endl;
+                }
+                if (board_btn[2].buttonOn && board_btn[2].isMouseOver(window)) {
+                    cout << "Board " << current + 2 << endl;
+                }
+                if (board_btn[3].buttonOn && board_btn[3].isMouseOver(window)) {
+                    cout << "Board " << current + 3 << endl;
+                }
+                if (board_btn[4].buttonOn && board_btn[4].isMouseOver(window)) {
+                    cout << "Board " << current + 4 << endl;
+                }
+                if (board_btn[5].buttonOn && board_btn[5].isMouseOver(window)) {
+                    cout << "Board " << current + 5 << endl;
+                }
+                if (board_btn[6].buttonOn && board_btn[6].isMouseOver(window)) {
+                    cout << "Board " << current + 6 << endl;
+                }
+                if (board_btn[7].buttonOn && board_btn[7].isMouseOver(window)) {
+                    cout << "Board " << current + 7 << endl;
+                }
+                if (back.isMouseOver(window)) {
+                    cout << "back" << endl;
+                }
+                if (logout.isMouseOver(window)) {
+                    cout << "Logout" << endl;
+                }
+                if (prev.isMouseOver(window)) {
+                    cout << "Prev" << endl;
+                    if (current > 0) current -= 8;
+                    for (int i = 0; i < 8; i++) {
+                        if (i + current < board_amount) {
+                            board_btn[i].buttonOn = true;
+                            board_btn[i].setText(boards[i + current].board_name);
+                        }
+                        else if (i + current >= board_amount) {
+                            board_btn[i].buttonOn = false;
+                            board_btn[i].setText("");
+                        }
+                    }
+                }
+                if (next.isMouseOver(window)) {
+                    cout << "Next " << endl;
+                    if (current + 8 < board_amount) current += 8;
+                    for (int i = 0; i < 8; i++) {
+                        if (i + current < board_amount) {
+                            board_btn[i].buttonOn = true;
+                            board_btn[i].setText(boards[i + current].board_name);
+                        }
+                        else if (i + current >= board_amount) {
+                            board_btn[i].buttonOn = false;
+                            board_btn[i].setText("");
+                        }
+                    }
+                }
+                if (add_board.buttonOn && add_board.isMouseOver(window)) {
+                    cout << "add board" << endl;
+                }
+                if (del_board.buttonOn && del_board.isMouseOver(window)) {
+                    cout << "delete board" << endl;
+                }
+#else
+                if (board_btn[0].buttonOn && board_btn[0].isMouseOver(window)) {
+                    return current;
+                }
+                if (board_btn[1].buttonOn && board_btn[1].isMouseOver(window)) {
+                    return current + 1;
+                }
+                if (board_btn[2].buttonOn && board_btn[2].isMouseOver(window)) {
+                    return current + 2;
+                }
+                if (board_btn[3].buttonOn && board_btn[3].isMouseOver(window)) {
+                    return current + 3;
+                }
+                if (board_btn[4].buttonOn && board_btn[4].isMouseOver(window)) {
+                    return current + 4;
+                }
+                if (board_btn[5].buttonOn && board_btn[5].isMouseOver(window)) {
+                    return current + 5;
+                }
+                if (board_btn[6].buttonOn && board_btn[6].isMouseOver(window)) {
+                    return current + 6;
+                }
+                if (board_btn[7].buttonOn && board_btn[7].isMouseOver(window)) {
+                    return current + 7;
+                }
+                if (back.isMouseOver(window)) {
+                    return -1;
+                }
+                if (logout.isMouseOver(window)) {
+                    return -2;
+                }
+                if (prev.isMouseOver(window)) {
+                    cout << "Prev" << endl;
+                    if (current > 0) current -= 8;
+                    for (int i = 0; i < 8; i++) {
+                        if (i + current < board_amount) {
+                            board_btn[i].buttonOn = true;
+                            board_btn[i].setText(boards[i + current].board_name);
+                        }
+                        else if (i + current >= board_amount) {
+                            board_btn[i].buttonOn = false;
+                            board_btn[i].setText("");
+                        }
+                    }
+                }
+                if (next.isMouseOver(window)) {
+                    cout << "Next " << endl;
+                    if (current + 8 < board_amount) current += 8;
+                    for (int i = 0; i < 8; i++) {
+                        if (i + current < board_amount) {
+                            board_btn[i].buttonOn = true;
+                            board_btn[i].setText(boards[i + current].board_name);
+                        }
+                        else if (i + current >= board_amount) {
+                            board_btn[i].buttonOn = false;
+                            board_btn[i].setText("");
+                        }
+                    }
+                }
+                if (add_board.buttonOn && add_board.isMouseOver(window)) {
+                    return -3;
+                }
+                if (del_board.buttonOn && del_board.isMouseOver(window)) {
+                    return -4;
+                }
+#endif
+                break;
+            }
+        }
+
+        for (int i = 0; i < 8; i++) {
+            board_btn[i].drawTo(window);
+        }
+        back.drawTo(window);
+        logout.drawTo(window);
+        prev.drawTo(window);
+        next.drawTo(window);
+        if (permission_lv == 2) {
+            add_board.drawTo(window);
+            del_board.drawTo(window);
+        }
+        window.draw(title);
+        window.display();
+    }
+}
+
+int Viewer::post_select(Board cur_board)
+{
+    sf::RenderWindow window(sf::VideoMode(700, 800), cur_board.board_name, sf::Style::Default ^ sf::Style::Resize);
+    sf::Font font;
+    font.loadFromFile("consola.ttf");
+
+    sf::Text title;
+    title.setFont(font);
+    title.setFillColor(sf::Color::Red);
+    title.setCharacterSize(50);
+    title.setString(cur_board.board_name);
+    title.setPosition({ 40, 30 });
+
+    //boards
+    int current = 0;
+    int post_amount = cur_board.all_Post.size();
+    //bool btnOn[8] = { true, true, true, true, true, true, true, true };
+    vector<Button>post_btn;
+    for (int i = 0; i < 8; i++) {
+        if (i < post_amount) {
+            Button btn(cur_board.all_Post[i].title[0], { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
+            post_btn.push_back(btn);
+            post_btn[i].setFont(font);
+            post_btn[i].setPos({ 20, (float)(130 + (70 * i)) });
+        }
+        else if (i >= post_amount) {
+            Button btn("", { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
+            post_btn.push_back(btn);
+            post_btn[i].setFont(font);
+            post_btn[i].setPos({ 20, (float)(130 + (70 * i)) });
+            post_btn[i].btnOff();
+        }
+    }
+    //functional buttons
+    Button back("Back", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    back.setFont(font);
+    back.setPos({ 50, 730 });
+    Button logout("Logout", { 100, 40 }, 24, sf::Color::White, sf::Color::Black);
+    logout.setFont(font);
+    logout.setPos({ 180, 730 });
+    Button prev("<<Prev", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    prev.setFont(font);
+    prev.setPos({ 420, 730 });
+    Button next("Next>>", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    next.setFont(font);
+    next.setPos({ 550, 730 });
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+            case sf::Event::Closed:
+                window.close();
+                break;
+            case sf::Event::MouseMoved:
+                if (post_btn[0].buttonOn && post_btn[0].isMouseOver(window)) {
+                    post_btn[0].setBgColor(sf::Color::White);
+                    post_btn[0].setTxtColor(sf::Color::Black);
+                }
+                else if (post_btn[1].buttonOn && post_btn[1].isMouseOver(window)) {
+                    post_btn[1].setBgColor(sf::Color::White);
+                    post_btn[1].setTxtColor(sf::Color::Black);
+                }
+                else if (post_btn[2].buttonOn && post_btn[2].isMouseOver(window)) {
+                    post_btn[2].setBgColor(sf::Color::White);
+                    post_btn[2].setTxtColor(sf::Color::Black);
+                }
+                else if (post_btn[3].buttonOn && post_btn[3].isMouseOver(window)) {
+                    post_btn[3].setBgColor(sf::Color::White);
+                    post_btn[3].setTxtColor(sf::Color::Black);
+                }
+                else if (post_btn[4].buttonOn && post_btn[4].isMouseOver(window)) {
+                    post_btn[4].setBgColor(sf::Color::White);
+                    post_btn[4].setTxtColor(sf::Color::Black);
+                }
+                else if (post_btn[5].buttonOn && post_btn[5].isMouseOver(window)) {
+                    post_btn[5].setBgColor(sf::Color::White);
+                    post_btn[5].setTxtColor(sf::Color::Black);
+                }
+                else if (post_btn[6].buttonOn && post_btn[6].isMouseOver(window)) {
+                    post_btn[6].setBgColor(sf::Color::White);
+                    post_btn[6].setTxtColor(sf::Color::Black);
+                }
+                else if (post_btn[7].buttonOn && post_btn[7].isMouseOver(window)) {
+                    post_btn[7].setBgColor(sf::Color::White);
+                    post_btn[7].setTxtColor(sf::Color::Black);
+                }
+                else if (back.isMouseOver(window)) {
+                    back.setBgColor(sf::Color::Red);
+                    back.setTxtColor(sf::Color::White);
+                }
+                else if (logout.isMouseOver(window)) {
+                    logout.setBgColor(sf::Color::Blue);
+                    logout.setTxtColor(sf::Color::White);
+                }
+                else if (prev.isMouseOver(window)) {
+                    prev.setBgColor(sf::Color::Yellow);
+                }
+                else if (next.isMouseOver(window)) {
+                    next.setBgColor(sf::Color::Yellow);
+                }
+                else {
+                    for (int i = 0; i < 8; i++) {
+                        post_btn[i].setBgColor(sf::Color::Black);
+                        post_btn[i].setTxtColor(sf::Color::White);
+                    }
+                    back.setBgColor(sf::Color::White);
+                    back.setTxtColor(sf::Color::Black);
+                    logout.setBgColor(sf::Color::White);
+                    logout.setTxtColor(sf::Color::Black);
+                    prev.setBgColor(sf::Color::White);
+                    next.setBgColor(sf::Color::White);
+                }
+                break;
+            case sf::Event::MouseButtonPressed:
+#if DEBUG
+                if (post_btn[0].buttonOn && post_btn[0].isMouseOver(window)) {
+                    cout << "Post " << cur_board.post_id[current] << endl;
+                }
+                if (post_btn[1].buttonOn && post_btn[1].isMouseOver(window)) {
+                    cout << "Post " << cur_board.post_id[current + 1] << endl;
+                }
+                if (post_btn[2].buttonOn && post_btn[2].isMouseOver(window)) {
+                    cout << "Post " << cur_board.post_id[current + 2] << endl;
+                }
+                if (post_btn[3].buttonOn && post_btn[3].isMouseOver(window)) {
+                    cout << "Post " << cur_board.post_id[current + 3] << endl;
+                }
+                if (post_btn[4].buttonOn && post_btn[4].isMouseOver(window)) {
+                    cout << "Post " << cur_board.post_id[current + 4] << endl;
+                }
+                if (post_btn[5].buttonOn && post_btn[5].isMouseOver(window)) {
+                    cout << "Post " << cur_board.post_id[current + 5] << endl;
+                }
+                if (post_btn[6].buttonOn && post_btn[6].isMouseOver(window)) {
+                    cout << "Post " << cur_board.post_id[current + 6] << endl;
+                }
+                if (post_btn[7].buttonOn && post_btn[7].isMouseOver(window)) {
+                    cout << "Post " << cur_board.post_id[current + 7] << endl;
+                }
+                if (back.isMouseOver(window)) {
+                    cout << "back" << endl;
+                }
+                if (logout.isMouseOver(window)) {
+                    cout << "Logout" << endl;
+                }
+                if (prev.isMouseOver(window)) {
+                    cout << "Prev" << endl;
+                    if (current > 0) current -= 8;
+                    for (int i = 0; i < 8; i++) {
+                        if (i + current < post_amount) {
+                            post_btn[i].buttonOn = true;
+                            post_btn[i].setText(cur_board.all_Post[i + current].title[0]);
+                        }
+                        else if (i + current >= post_amount) {
+                            post_btn[i].buttonOn = false;
+                            post_btn[i].setText("");
+                        }
+                    }
+                }
+                if (next.isMouseOver(window)) {
+                    cout << "Next " << endl;
+                    if (current + 8 < post_amount) current += 8;
+                    for (int i = 0; i < 8; i++) {
+                        if (i + current < post_amount) {
+                            post_btn[i].buttonOn = true;
+                            post_btn[i].setText(cur_board.all_Post[i + current].title[0]);
+                        }
+                        else if (i + current >= post_amount) {
+                            post_btn[i].buttonOn = false;
+                            post_btn[i].setText("");
+                        }
+                    }
+                }
+#else
+                if (post_btn[0].buttonOn && post_btn[0].isMouseOver(window)) {
+                    return cur_board.post_id[current];
+                }
+                if (post_btn[1].buttonOn && post_btn[1].isMouseOver(window)) {
+                    return cur_board.post_id[current + 1];
+                }
+                if (post_btn[2].buttonOn && post_btn[2].isMouseOver(window)) {
+                    return cur_board.post_id[current + 2];
+                }
+                if (post_btn[3].buttonOn && post_btn[3].isMouseOver(window)) {
+                    return cur_board.post_id[current + 3];
+                }
+                if (post_btn[4].buttonOn && post_btn[4].isMouseOver(window)) {
+                    return cur_board.post_id[current + 4];
+                }
+                if (post_btn[5].buttonOn && post_btn[5].isMouseOver(window)) {
+                    return cur_board.post_id[current + 5];
+                }
+                if (post_btn[6].buttonOn && post_btn[6].isMouseOver(window)) {
+                    return cur_board.post_id[current + 6];
+                }
+                if (post_btn[7].buttonOn && post_btn[7].isMouseOver(window)) {
+                    return cur_board.post_id[current + 7];
+                }
+                if (back.isMouseOver(window)) {
+                    return -1;
+                }
+                if (logout.isMouseOver(window)) {
+                    return -2;
+                }
+                if (prev.isMouseOver(window)) {
+                    cout << "Prev" << endl;
+                    if (current > 0) current -= 8;
+                    for (int i = 0; i < 8; i++) {
+                        if (i + current < post_amount) {
+                            post_btn[i].buttonOn = true;
+                            post_btn[i].setText(cur_board.all_Post[i + current].title[0]);
+                        }
+                        else if (i + current >= post_amount) {
+                            post_btn[i].buttonOn = false;
+                            post_btn[i].setText("");
+                        }
+                    }
+                }
+                if (next.isMouseOver(window)) {
+                    cout << "Next " << endl;
+                    if (current + 8 < post_amount) current += 8;
+                    for (int i = 0; i < 8; i++) {
+                        if (i + current < post_amount) {
+                            post_btn[i].buttonOn = true;
+                            post_btn[i].setText(cur_board.all_Post[i + current].title[0]);
+                        }
+                        else if (i + current >= post_amount) {
+                            post_btn[i].buttonOn = false;
+                            post_btn[i].setText("");
+                        }
+                    }
+                }
+#endif
+                break;
+            }
+        }
+
+        for (int i = 0; i < 8; i++) {
+            post_btn[i].drawTo(window);
+        }
+        back.drawTo(window);
+        logout.drawTo(window);
+        prev.drawTo(window);
+        next.drawTo(window);
         window.draw(title);
         window.display();
     }
