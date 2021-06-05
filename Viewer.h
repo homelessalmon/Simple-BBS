@@ -37,7 +37,7 @@ public:
 	}
 
 	void setText(string txt) {
-		this->text.setString(txt);
+		text.setString(txt);
 	}
 
 	void setBgColor(sf::Color color) {
