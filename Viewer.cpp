@@ -16,7 +16,7 @@ int Viewer::menu1()
     return n;
 }
 
-int Viewer::login(string& username, string& password)
+int Viewer::login(string& username, string& password, int check)
 {
     cout << "  _                _" << endl;
     cout << " | |  ___    __ _ (_) _ __" << endl;
@@ -24,6 +24,8 @@ int Viewer::login(string& username, string& password)
     cout << " | || (_) || (_| || || | | |" << endl;
     cout << " |_| \\___/ \\__,  ||_||_| |_|" << endl;
     cout << "           |___ /\n" << endl;
+    if (check == -1) cout << "--Username not exist--" << endl;
+    if (check == -2) cout << "--Wrong password--" << endl;
     cout << "Back to menu: 0\n>";
     char n;
     cin >> n;
@@ -63,7 +65,7 @@ int Viewer::login(string& username, string& password)
     return 1;
 }
 
-int Viewer::signup(string& username, string& password)
+int Viewer::signup(string& username, string& password, int check)
 {
     cout << "       _                                " << endl;
     cout << "      (_)                               " << endl;
@@ -73,6 +75,7 @@ int Viewer::signup(string& username, string& password)
     cout << " |___/|_| \\__, ||_| |_|    \\__,_|| .__/ " << endl;
     cout << "           __/ |                 | |    " << endl;
     cout << "          |___/                  |_|    \n" << endl;
+    if (check == -1) cout << "--Username existed, try another one--" << endl;
     cout << "Back to menu: 0\n>";
     char n;
     cin >> n;
