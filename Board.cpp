@@ -59,6 +59,7 @@ void Post::load_post(int post_id)
 
 void Board::load_all_post()
 {
+	all_Post.clear();
 	for (int i = 0; i < post_id.size(); i++)
 	{
 		Post tmp;
