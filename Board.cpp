@@ -57,4 +57,12 @@ void Post::load_post(int post_id)
 	}
 }
 
-
+void Board::load_all_post()
+{
+	for (int i = 0; i < post_id.size(); i++)
+	{
+		Post tmp;
+		tmp.load_post(post_id[i]);
+		all_Post.push_back(tmp);
+	}
+}
