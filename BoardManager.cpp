@@ -44,7 +44,7 @@ void BoardManager::load_board()
 		if (fin.is_open())
 		{
 			string _board_name; int tmp; vector<int> post_id;
-			fin >> _board_name;
+			getline(fin, _board_name);
 			if (_board_name != REMOVE)
 			{
 				while (fin >> tmp) { post_id.push_back(tmp); }
@@ -55,7 +55,7 @@ void BoardManager::load_board()
 			}
 			else
 			{
-				fin >> _board_name;
+				getline(fin, _board_name);
 				Board* tmp2 = new Board(post_id, _board_name);
 				tmp2->is_removed = true;
 				boards.push_back(*(tmp2));
