@@ -12,11 +12,11 @@ using namespace std;
 class Viewer
 {
 public:
-	int menu1(); //0: Exit; 1: Log in: 2: Sign up: 3: Guest
-	int menu2(); //0: Logout; 1: View Boards: 2: Mailbox
-	int login(string&, string&); //0: back to menu; 1: end successfully 
-	int signup(string&, string&); //0: back to menu; 1: end successfully
-	void board_select(); //-1: back; -2: menu; -3: add board(admin); 0~n: board ID
+	int menu1(); //0.Exit; 1.Log in; 2.Sign up; 3.Guest
+	int menu2(); //0.Logout; 1.View Boards; 2.Mailbox
+	int login(string&, string&, int check); //0.back to menu; 1.end successfully //check: -1.Username not exist; -2.Wrong Password
+	int signup(string&, string&, int check); //0.back to menu; 1.end successfully //check: -1.Username existed;
+	void board_select(); //-1.back; -2.menu; -3.add board(admin); 0~n.board ID
 	void post_select();
 };
 
