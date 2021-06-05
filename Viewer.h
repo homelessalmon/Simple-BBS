@@ -5,6 +5,7 @@
 #include <vector>
 #include <conio.h>
 #include <stdlib.h>
+#include "Board.h"
 
 using namespace std;
 
@@ -15,21 +16,30 @@ public:
 	int menu2(); //0.Logout; 1.View Boards; 2.Mailbox
 	int login(string&, string&, int check); //0.back to menu; 1.end successfully //check: -1.Username not exist; -2.Wrong Password
 	int signup(string&, string&, int check); //0.back to menu; 1.end successfully //check: -1.Username existed;
-	void board_select(); //-1.back; -2.menu; -3.add board(admin); 0~n.board ID
-	void post_select();
+	void mailbox();
+	int board_select(vector<Board>, int permission_lv); //-1.back; -2.logout; -3.add board(admin); -4.del board(admin); 0~n.board ID
+	int post_select(Board); //-1.back; -2.logout; 0~n.post ID
+	void view_post();
+	void view_comment();
 };
 
 class Button
 {
 public:
-	Button() {};
+	bool buttonOn;
+	Button() { };
 	Button(string t, sf::Vector2f size, int charSize, sf::Color bgColor, sf::Color textColor) {
 		text.setString(t);
 		text.setFillColor(textColor);
 		text.setCharacterSize(charSize);
 		button.setSize(size);
 		button.setFillColor(bgColor);
+		buttonOn = true;
 	}
+
+	void btnOn() { buttonOn = true; }
+
+	void btnOff() { buttonOn = false; }
 
 	void setFont(sf::Font& font) {
 		text.setFont(font);
