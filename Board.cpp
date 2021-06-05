@@ -13,25 +13,6 @@ Post::Post(vector<string> _title, vector<string> _content, vector<Comment> _comm
 	comments = _comments;
 }
 
-void Post::load_post(int post_id)
-{
-	ifstream fin("posts/" + to_string(post_id) + "title.txt");
-	string tmp;
-	while (getline(fin, tmp)) { title.push_back(tmp); }
-	fin.close();
-
-	fin.open("posts/" + to_string(post_id) + "content.txt");
-	while (getline(fin, tmp)) { content.push_back(tmp); }
-	fin.close();
-
-	comments = load_comment(post_id);
-
-	if (title[0] == REMOVE)
-	{
-		is_removed = true;
-	}
-}
-
 vector<Comment> load_comment(int post_id)
 {
 	ifstream fin("posts/" + to_string(post_id) + "comment.txt");
@@ -56,3 +37,24 @@ vector<Comment> load_comment(int post_id)
 	fin.close();
 	return list;
 }
+
+void Post::load_post(int post_id)
+{
+	ifstream fin("posts/" + to_string(post_id) + "title.txt");
+	string tmp;
+	while (getline(fin, tmp)) { title.push_back(tmp); }
+	fin.close();
+
+	fin.open("posts/" + to_string(post_id) + "content.txt");
+	while (getline(fin, tmp)) { content.push_back(tmp); }
+	fin.close();
+
+	comments = load_comment(post_id);
+
+	if (title[0] == REMOVE)
+	{
+		is_removed = true;
+	}
+}
+
+
