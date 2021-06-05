@@ -27,6 +27,7 @@ public:
   vector<Comment> comments;
   bool is_removed = false;
 
+  Post() {  }
   Post(vector<string> _title, vector<string> _content, vector<Comment> _comments);
   void load_post(int post_id);
 };
@@ -35,8 +36,10 @@ class Board
 {
 public:
   vector<int> post_id;
+  vector<Post> all_Post;
   string board_name;//reason if removed;
   bool is_removed = false;
 
   Board(vector<int> _post_id, string board_name);
+  void load_all_post();
 };
