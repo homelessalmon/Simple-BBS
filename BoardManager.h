@@ -39,5 +39,7 @@ public:
 	void load_mail();//bound to current users,after calling this function,can use vector users[current_user]->mail
 	vector<pair<string, string>> return_name_and_password();
 	string return_post_author(int post_id);
+	int return_post_author_id(int post_id);
 	int post_id_to_index(int post_id, vector<Board> boards, int board_id);
+	
 };
