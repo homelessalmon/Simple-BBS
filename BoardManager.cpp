@@ -28,7 +28,7 @@ void BoardManager::exe() {
 			}break;
 
 		}break;
-			
+
 		case LOGIN: {
 			string account, password;
 			int op = viewer.login(account, password, return_name_and_password());
@@ -273,7 +273,14 @@ void BoardManager::load_mail() {
 			if (id == current_user) {
 				fin >> catch_string;
 
-				string tmp;
+				string tmp, title;
+
+				ifstream fin3("mails/" + to_string(i) + "title.txt");
+				if (fin3.is_open()) {
+					getline(fin3, title);
+				}
+				fin3.close();
+
 				vector<string> tmp_vector;
 				ifstream fin2("mails/" + to_string(i) + "content.txt");
 				if (fin2.is_open()) {
@@ -281,7 +288,7 @@ void BoardManager::load_mail() {
 				}
 				fin2.close();
 
-				Mail aPost(catch_string, tmp_vector);
+				Mail aPost(catch_string, title, tmp_vector);
 				users[current_user]->mail_list.push_back(aPost);
 			}
 		}
