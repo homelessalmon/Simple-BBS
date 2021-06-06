@@ -48,7 +48,7 @@ void BoardManager::exe() {
 			string account, password;
 			switch (viewer.signup(account, password, return_name_and_password())) {
 			case 1: {
-				User user;
+				Member member(account, password);
 				load_user();
 				state = MENU;
 			}break;
@@ -122,15 +122,16 @@ void BoardManager::exe() {
 		}break;
 
 		case DELETE_BOARD: {
-			string wake = "961pro";
+			string reason;
 			int op = viewer.board_delete(boards);
 			switch (op) {
 			case -1:
-				MessageBox(NULL, L"Board Doesn't Exist", NULL, MB_ICONHAND | MB_OK);
+				//MessageBox(NULL, L"Board Doesn't Exist", NULL, MB_ICONHAND | MB_OK);
 				state = SELECT_BOARD;
 				break;
 			default:
-				users[current_user]->remove_board(op, wake);
+				viewer.window_txtbox("Delete Board", "Please input the reason", reason, 28, 100, 90);
+				users[current_user]->remove_board(op, reason);
 				load_board();
 				state = SELECT_BOARD;
 				break;
@@ -147,6 +148,11 @@ void BoardManager::exe() {
 			case -2:
 				state = MENU;
 				break;
+			case -3: {
+				string title;
+				viewer.window_txtbox("New post", "Please input the title", title, 28, 200, 90);
+				users[current_user]->add_post(current_board, title);
+			}break;
 			default:
 				current_post = op;
 				state = POST;
@@ -190,6 +196,8 @@ void BoardManager::exe() {
 		}
 	}
 }
+
+#include "BoardManager.h"
 
 void BoardManager::load_user() {
 	ifstream fin("users/count.txt");
@@ -247,47 +255,33 @@ void BoardManager::load_board() {
 	}
 }
 
-void BoardManager::load_mail()
-{
+void BoardManager::load_mail() {
 	int mail_count = 0;
 	ifstream fin("mails/count.txt");
-	if (fin.is_open())
-	{
+	if (fin.is_open()) {
 		fin >> mail_count;
 	}
 	fin.close();
 
-	for (int i = 0; i < mail_count; i++)
-	{
+	for (int i = 0; i < mail_count; i++) {
 		fin.open("mails/" + to_string(i) + "info.txt");
-		if (fin.is_open())
-		{
+		if (fin.is_open()) {
 			string catch_string;
 			int id;
 			fin >> catch_string >> id;
 
-			if (id == current_user)
-			{
+			if (id == current_user) {
 				fin >> catch_string;
 
-				string tmp, title;
-
-				ifstream fin3("mails/" + to_string(i) + "title.txt");
-				if (fin3.is_open())
-				{
-					getline(fin3, title);
-				}
-				fin3.close();
-
+				string tmp;
 				vector<string> tmp_vector;
 				ifstream fin2("mails/" + to_string(i) + "content.txt");
-				if (fin2.is_open())
-				{
+				if (fin2.is_open()) {
 					while (getline(fin2, tmp)) { tmp_vector.push_back(tmp); }
 				}
 				fin2.close();
 
-				Mail aPost(catch_string, title, tmp_vector);
+				Mail aPost(catch_string, tmp_vector);
 				users[current_user]->mail_list.push_back(aPost);
 			}
 		}
