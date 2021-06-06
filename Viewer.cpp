@@ -139,7 +139,6 @@ int Viewer::login(string& username, string& password, vector<pair<string, string
     errormsg.setFillColor(sf::Color::Black);
     errormsg.setString("Invalid Input");
     errormsg.setPosition({ 265, 510 });
-    window.draw(errormsg);
 
     Textbox txtbox_username(30, sf::Color::Black, false);
     txtbox_username.setFont(font);
@@ -267,7 +266,6 @@ int Viewer::signup(string& username, string& password, vector<pair<string, strin
     errormsg.setFillColor(sf::Color::Black);
     errormsg.setString("Invalid Input");
     errormsg.setPosition({ 265, 510 });
-    window.draw(errormsg);
 
     Textbox txtbox_username(30, sf::Color::Black, false);
     txtbox_username.setFont(font);
@@ -728,6 +726,117 @@ int Viewer::board_select(vector<Board> boards, int permission_lv)
             del_board.drawTo(window);
         }
         window.draw(title);
+        window.display();
+    }
+}
+
+int Viewer::board_add(vector<Board> boards, string& name)
+{
+    sf::RenderWindow window(sf::VideoMode(700, 800), "add board", sf::Style::Default ^ sf::Style::Resize);
+    sf::Font font;
+    font.loadFromFile("consola.ttf");
+
+    sf::Text title, txt;
+    title.setFont(font);
+    title.setCharacterSize(70);
+    title.setFillColor(sf::Color::Red);
+    title.setString("Add Board");
+    title.setPosition({ 165, 90 });
+    txt.setFont(font);
+    txt.setCharacterSize(30);
+    txt.setFillColor(sf::Color::White);
+    txt.setString("Boardname:");
+    txt.setPosition({ 100, 250 });
+    sf::Text errormsg;
+    errormsg.setFont(font);
+    errormsg.setCharacterSize(20);
+    errormsg.setFillColor(sf::Color::Black);
+    errormsg.setString("Invalid Input");
+    errormsg.setPosition({ 265, 380 });
+    
+
+    Textbox txtbox_boardname(30, sf::Color::Black, false);
+    txtbox_boardname.setFont(font);
+    txtbox_boardname.setPos({ 100, 300 });
+    txtbox_boardname.setLimit(true, 20);
+
+
+    Button enter("Enter", { 130, 65 }, 30, sf::Color::White, sf::Color::Black);
+    enter.setFont(font);
+    enter.setPos({ 150, 450 });
+    Button cancel("Cancel", { 130, 65 }, 30, sf::Color::White, sf::Color::Black);
+    cancel.setFont(font);
+    cancel.setPos({ 400, 450 });
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+            case sf::Event::Closed:
+                window.close();
+                break;
+            case sf::Event::TextEntered:
+                if (txtbox_boardname.isSel()) {
+                    txtbox_boardname.typedOn(event);
+                }
+                break;
+            case sf::Event::MouseMoved:
+                if (enter.isMouseOver(window)) {
+                    enter.setTxtColor(sf::Color::White);
+                    enter.setBgColor(sf::Color(0, 204, 0));
+                }
+                else if (cancel.isMouseOver(window)) {
+                    cancel.setTxtColor(sf::Color::White);
+                    cancel.setBgColor(sf::Color::Red);
+                }
+                else {
+                    enter.setTxtColor(sf::Color::Black);
+                    enter.setBgColor(sf::Color::White);
+                    cancel.setTxtColor(sf::Color::Black);
+                    cancel.setBgColor(sf::Color::White);
+                }
+                break;
+            case sf::Event::MouseButtonPressed:
+                if (txtbox_boardname.isMouseOver(window)) {
+                    txtbox_boardname.setSelected(true);
+                }
+                else if (enter.isMouseOver(window)) {
+                    txtbox_boardname.setSelected(false);
+                    string t;
+                    t = txtbox_boardname.getText();
+                    //cout << t << endl;
+                    bool valid = true;
+                    for (int i = 0; i < boards.size(); i++) {
+                        if (boards[i].board_name == t || t == "") {
+                            valid = false;
+                            errormsg.setFillColor(sf::Color::Red);
+                            break;
+                        }
+                    }
+                    if (valid) {
+                        errormsg.setFillColor(sf::Color::Black);
+                        return 1;
+                    }
+                }
+                else if (cancel.isMouseOver(window)) {
+                    //cout << "cancel" << endl;
+                    txtbox_boardname.setSelected(false);
+                    return -1;
+                }
+                else {
+                    txtbox_boardname.setSelected(false);
+                }
+                break;
+            }
+        }
+
+        window.clear();
+        window.draw(title);
+        window.draw(txt);
+        window.draw(errormsg);
+        txtbox_boardname.drawTo(window);
+        enter.drawTo(window);
+        cancel.drawTo(window);
         window.display();
     }
 }
