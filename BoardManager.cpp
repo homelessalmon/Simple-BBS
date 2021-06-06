@@ -105,3 +105,21 @@ void BoardManager::load_mail()
 		fin.close();
 	}
 }
+
+vector<pair<string, string>> BoardManager::return_name_and_password()
+{
+	vector<pair<string, string>> return_list;
+	for (int i = 0; i < users.size(); i++)
+	{
+		ifstream fin("users/" + to_string(i) + ".txt");
+		if (fin.is_open())
+		{
+			string name, password;
+			fin >> name >> password;
+			pair<string, string> tmp(name, password);
+			return_list.push_back(tmp);
+		}
+		fin.close();
+	}
+	return return_list;
+}
