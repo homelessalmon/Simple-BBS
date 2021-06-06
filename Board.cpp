@@ -25,7 +25,8 @@ vector<Comment> load_comment(int post_id)
 		ss.clear();
 
 		ss << name;
-		ss >> name >> com;
+		ss >> name;
+		getline(ss,com);
 
 		Comment tmp(name, com);
 		if (name == REMOVE)
