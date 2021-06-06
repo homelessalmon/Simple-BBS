@@ -317,10 +317,10 @@ int Viewer::signup(string& username, string& password, vector<pair<string, strin
             case sf::Event::MouseButtonPressed:
                 if (txtbox_username.isMouseOver(window)) {
                     txtbox_username.setSelected(true);
-                    txtbox_password.setSelected(false);
+                    txtbox_password.pwd_setSelected(false);
                 }
                 else if (txtbox_password.isMouseOver(window)) {
-                    txtbox_password.setSelected(true);
+                    txtbox_password.pwd_setSelected(true);
                     txtbox_username.setSelected(false);
                 }
                 else if (enter.isMouseOver(window)) {
@@ -336,17 +336,17 @@ int Viewer::signup(string& username, string& password, vector<pair<string, strin
                         errormsg.setFillColor(sf::Color::Red);
                     }
                     txtbox_username.setSelected(false);
-                    txtbox_password.setSelected(false);
+                    txtbox_password.pwd_setSelected(false);
                 }
                 else if (cancel.isMouseOver(window)) {
                     //cout << "cancel" << endl;
                     txtbox_username.setSelected(false);
-                    txtbox_password.setSelected(false);
+                    txtbox_password.pwd_setSelected(false);
                     return -1;
                 }
                 else {
                     txtbox_username.setSelected(false);
-                    txtbox_password.setSelected(false);
+                    txtbox_password.pwd_setSelected(false);
                 }
                 break;
             }
@@ -444,7 +444,7 @@ void Viewer::mailbox()
 
 }
 
-void Viewer::view_mail()
+void Viewer::sendMail()
 {
 
 }
@@ -873,12 +873,20 @@ int Viewer::board_delete(vector<Board> boards)
 
     //boards
     int current = 0;
-    int board_amount = boards.size();
-    //bool btnOn[8] = { true, true, true, true, true, true, true, true };
+    vector<int> validVal;
+    vector<Board> validBoard;
+    for (int i = 0; i < boards.size(); i++) {
+        if (!boards[i].is_removed) {
+            validBoard.push_back(boards[i]);
+            validVal.push_back(i);
+        }
+    }
+    int board_amount = validBoard.size();
+
     vector<Button>board_btn;
     for (int i = 0; i < 8; i++) {
         if (i < board_amount) {
-            Button btn(boards[i].board_name, { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
+            Button btn(validBoard[i].board_name, { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
             board_btn.push_back(btn);
             board_btn[i].setFont(font);
             board_btn[i].setPos({ 20, (float)(130 + (70 * i)) });
@@ -965,28 +973,28 @@ int Viewer::board_delete(vector<Board> boards)
                 break;
             case sf::Event::MouseButtonPressed:
                 if (board_btn[0].isOn() && board_btn[0].isMouseOver(window)) {
-                    return current;
+                    return validVal[current];
                 }
                 if (board_btn[1].isOn() && board_btn[1].isMouseOver(window)) {
-                    return current + 1;
+                    return validVal[current + 1];
                 }
                 if (board_btn[2].isOn() && board_btn[2].isMouseOver(window)) {
-                    return current + 2;
+                    return validVal[current + 2];
                 }
                 if (board_btn[3].isOn() && board_btn[3].isMouseOver(window)) {
-                    return current + 3;
+                    return validVal[current + 3];
                 }
                 if (board_btn[4].isOn() && board_btn[4].isMouseOver(window)) {
-                    return current + 4;
+                    return validVal[current + 4];
                 }
                 if (board_btn[5].isOn() && board_btn[5].isMouseOver(window)) {
-                    return current + 5;
+                    return validVal[current + 5];
                 }
                 if (board_btn[6].isOn() && board_btn[6].isMouseOver(window)) {
-                    return current + 6;
+                    return validVal[current + 6];
                 }
                 if (board_btn[7].isOn() && board_btn[7].isMouseOver(window)) {
-                    return current + 7;
+                    return validVal[current + 7];
                 }
                 if (back.isMouseOver(window)) {
                     return -1;
@@ -998,7 +1006,7 @@ int Viewer::board_delete(vector<Board> boards)
                         for (int i = 0; i < 8; i++) {
                             if (i + current < board_amount) {
                                 board_btn[i].btnOn();
-                                board_btn[i].setText(boards[i + current].board_name);
+                                board_btn[i].setText(validBoard[i + current].board_name);
                             }
                             else if (i + current >= board_amount) {
                                 board_btn[i].btnOff();
@@ -1014,7 +1022,7 @@ int Viewer::board_delete(vector<Board> boards)
                         for (int i = 0; i < 8; i++) {
                             if (i + current < board_amount) {
                                 board_btn[i].btnOn();
-                                board_btn[i].setText(boards[i + current].board_name);
+                                board_btn[i].setText(validBoard[i + current].board_name);
                             }
                             else if (i + current >= board_amount) {
                                 board_btn[i].btnOff();
@@ -1302,11 +1310,14 @@ int Viewer::post_select(Board cur_board)
     }
 }
 
-int Viewer::view_post(vector<Post> posts, string author, int postID, int boardID, int userID, int permission_lv)
+int Viewer::view_post(vector<Post> posts, string author, int authorID, int postID, int boardID, int userID, int permission_lv)
 {
     sf::RenderWindow window(sf::VideoMode(700, 800), posts[postID].title, sf::Style::Default ^ sf::Style::Resize);
     sf::Font font;
     font.loadFromFile("consola.ttf");
+    bool myPost;
+    if (authorID == userID) myPost = true;
+    else myPost = false;
 
     string a = "Author: " + author, t = "Title: " + posts[postID].title;
     sf::Text txt_author(a, font, 30);
@@ -1356,7 +1367,11 @@ int Viewer::view_post(vector<Post> posts, string author, int postID, int boardID
     Button del("Delete", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
     del.setFont(font);
     del.setPos({ 550, 40 });
-    if (permission_lv != 2) {
+    if (myPost) {}
+    else if (permission_lv == 2) {
+        del.btnOff();
+    }
+    else {
         edit.btnOff();
         del.btnOff();
     }
