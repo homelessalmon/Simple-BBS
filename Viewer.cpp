@@ -270,7 +270,7 @@ int Viewer::signup(string& username, string& password, vector<pair<string, strin
     Textbox txtbox_username(30, sf::Color::Black, false);
     txtbox_username.setFont(font);
     txtbox_username.setPos({ 100, 300 });
-    txtbox_username.setLimit(true, 20);
+    txtbox_username.setLimit(true, 10);
     Textbox txtbox_password(30, sf::Color::Black, false);
     txtbox_password.setFont(font);
     txtbox_password.setPos({ 100, 430 });
@@ -437,6 +437,16 @@ int Viewer::menu2()
         window.draw(title);
         window.display();
     }
+}
+
+void Viewer::mailbox()
+{
+
+}
+
+void Viewer::sendMail()
+{
+
 }
 
 int Viewer::board_select(vector<Board> boards, int permission_lv)
@@ -1028,11 +1038,8 @@ int Viewer::post_select(Board cur_board)
     sf::Font font;
     font.loadFromFile("consola.ttf");
 
-    sf::Text title;
-    title.setFont(font);
+    sf::Text title(cur_board.board_name, font, 50);
     title.setFillColor(sf::Color::Red);
-    title.setCharacterSize(50);
-    title.setString(cur_board.board_name);
     title.setPosition({ 40, 30 });
 
     //boards
@@ -1042,7 +1049,7 @@ int Viewer::post_select(Board cur_board)
     vector<Button>post_btn;
     for (int i = 0; i < 8; i++) {
         if (i < post_amount) {
-            Button btn(cur_board.all_Post[i].title[0], { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
+            Button btn(cur_board.all_Post[i].title, { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
             post_btn.push_back(btn);
             post_btn[i].setFont(font);
             post_btn[i].setPos({ 20, (float)(130 + (70 * i)) });
@@ -1234,7 +1241,7 @@ int Viewer::post_select(Board cur_board)
                         for (int i = 0; i < 8; i++) {
                             if (i + current < post_amount) {
                                 post_btn[i].btnOn();
-                                post_btn[i].setText(cur_board.all_Post[i + current].title[0]);
+                                post_btn[i].setText(cur_board.all_Post[i + current].title);
                             }
                             else if (i + current >= post_amount) {
                                 post_btn[i].btnOff();
@@ -1250,7 +1257,7 @@ int Viewer::post_select(Board cur_board)
                         for (int i = 0; i < 8; i++) {
                             if (i + current < post_amount) {
                                 post_btn[i].btnOn();
-                                post_btn[i].setText(cur_board.all_Post[i + current].title[0]);
+                                post_btn[i].setText(cur_board.all_Post[i + current].title);
                             }
                             else if (i + current >= post_amount) {
                                 post_btn[i].btnOff();
@@ -1275,4 +1282,401 @@ int Viewer::post_select(Board cur_board)
         window.draw(title);
         window.display();
     }
+}
+
+int Viewer::view_post(vector<Post> posts, string author, int postID, int boardID, int userID, int permission_lv)
+{
+    sf::RenderWindow window(sf::VideoMode(700, 800), posts[postID].title, sf::Style::Default ^ sf::Style::Resize);
+    sf::Font font;
+    font.loadFromFile("consola.ttf");
+
+    string a = "Author: " + author, t = "Title: " + posts[postID].title;
+    sf::Text txt_author(a, font, 30);
+    txt_author.setFillColor(sf::Color::Red);
+    txt_author.setPosition({ 30, 45 });
+    sf::Text title(t, font, 30);
+    title.setFillColor(sf::Color::White);
+    title.setPosition({ 30, 120 });
+
+    //boards
+    int current = 0;
+    int line_amount = posts[postID].content.size();
+    vector<sf::Text>lines;
+    for (int i = 0; i < 12; i++) {
+        if (i < line_amount) {
+            sf::Text line(posts[postID].content[i], font, 30);
+            lines.push_back(line);
+            lines[i].setFillColor(sf::Color::White);
+            lines[i].setPosition({ 70, (float)(200 + (40 * i)) });
+        }
+        else if (i >= line_amount) {
+            sf::Text line("", font, 30);
+            lines.push_back(line);
+            lines[i].setFillColor(sf::Color::White);
+            lines[i].setPosition({ 70, (float)(200 + (30 * i)) });
+        }
+    }
+    //functional buttons
+    Button back("Back", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    back.setFont(font);
+    back.setPos({ 50, 730 });
+    Button logout("Logout", { 100, 40 }, 24, sf::Color::White, sf::Color::Black);
+    logout.setFont(font);
+    logout.setPos({ 175, 730 });
+    Button comment("Comment", { 100, 40 }, 22, sf::Color(255, 128, 0), sf::Color::White);
+    comment.setFont(font);
+    comment.setPos({ 300, 730 });
+    Button pgup("<<PgUp", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    pgup.setFont(font);
+    pgup.setPos({ 425, 730 });
+    Button pgdn("PgDn>>", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    pgdn.setFont(font);
+    pgdn.setPos({ 550, 730 });
+    Button edit("Edit", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    edit.setFont(font);
+    edit.setPos({ 420, 40 });
+    Button del("Delete", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    del.setFont(font);
+    del.setPos({ 550, 40 });
+    if (permission_lv != 2) {
+        edit.btnOff();
+        del.btnOff();
+    }
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+            case sf::Event::Closed:
+                window.close();
+                break;
+            case sf::Event::MouseMoved:
+                if (back.isMouseOver(window)) {
+                    back.setBgColor(sf::Color::Red);
+                    back.setTxtColor(sf::Color::White);
+                }
+                else if (logout.isMouseOver(window)) {
+                    logout.setBgColor(sf::Color::Blue);
+                    logout.setTxtColor(sf::Color::White);
+                }
+                else if (comment.isMouseOver(window)) {
+                    comment.setBgColor(sf::Color(204, 102, 0));
+                }
+                else if (pgup.isMouseOver(window)) {
+                    pgup.setBgColor(sf::Color::Yellow);
+                }
+                else if (pgdn.isMouseOver(window)) {
+                    pgdn.setBgColor(sf::Color::Yellow);
+                }
+                else if (edit.isOn() && edit.isMouseOver(window)) {
+                    edit.setBgColor(sf::Color::Green);
+                }
+                else if (del.isOn() && del.isMouseOver(window)) {
+                    del.setBgColor(sf::Color::Red);
+                    del.setTxtColor(sf::Color::White);
+                }
+                else {
+                    back.setBgColor(sf::Color::White);
+                    back.setTxtColor(sf::Color::Black);
+                    logout.setBgColor(sf::Color::White);
+                    logout.setTxtColor(sf::Color::Black);
+                    comment.setBgColor(sf::Color(255, 128, 0));
+                    pgup.setBgColor(sf::Color::White);
+                    pgdn.setBgColor(sf::Color::White);
+                    edit.setBgColor(sf::Color::White);
+                    del.setBgColor(sf::Color::White);
+                    del.setTxtColor(sf::Color::Black);
+                }
+                break;
+            case sf::Event::MouseButtonPressed:
+                if (back.isMouseOver(window)) {
+                    //cout << "back" << endl;
+                    return -1;
+                }
+                if (logout.isMouseOver(window)) {
+                    //cout << "logout" << endl;
+                    return -2;
+                }
+                if (comment.isMouseOver(window)) {
+                    //cout << "comment" << endl;
+                    return -3;
+                }
+                if (pgup.isMouseOver(window)) {
+                    cout << "Pgup" << endl;
+                    if (current > 0) {
+                        current -= 12;
+                        for (int i = 0; i < 12; i++) {
+                            if (i + current < line_amount) {
+                                lines[i].setString(posts[postID].content[i + current]);
+                            }
+                            else if (i + current >= line_amount) {
+                                lines[i].setString("");
+                            }
+                        }
+                    }
+                }
+                if (pgdn.isMouseOver(window)) {
+                    cout << "Pgdn " << endl;
+                    if (current + 12 < line_amount) {
+                        current += 12;
+                        for (int i = 0; i < 12; i++) {
+                            if (i + current < line_amount) {
+                                lines[i].setString(posts[postID].content[i + current]);
+                            }
+                            else if (i + current >= line_amount) {
+                                lines[i].setString("");
+                            }
+                        }
+                    }
+                }
+                if (edit.isOn() && edit.isMouseOver(window)) {
+                    //cout << "edit" << endl;
+                    return -4;
+                }
+                if (del.isOn() && del.isMouseOver(window)) {
+                    //cout << "del" << endl;
+                    return -5;
+                }
+                break;
+            }
+        }
+
+        window.clear();
+        for (int i = 0; i < 12; i++) {
+            window.draw(lines[i]);
+        }        
+        window.draw(txt_author);
+        window.draw(title);
+        back.drawTo(window);
+        logout.drawTo(window);
+        comment.drawTo(window);
+        pgup.drawTo(window);
+        pgdn.drawTo(window);
+        if (permission_lv == 2) {
+            edit.drawTo(window);
+            del.drawTo(window);
+        }
+        window.display();
+    }
+}
+
+int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permission_lv)
+{
+    sf::RenderWindow window(sf::VideoMode(700, 800), posts[postID].title + "_comments", sf::Style::Default ^ sf::Style::Resize);
+    sf::Font font;
+    font.loadFromFile("consola.ttf");
+
+    sf::Text txt_author("Comments of", font, 40);
+    txt_author.setFillColor(sf::Color::Red);
+    txt_author.setPosition({ 30, 30 });
+    sf::Text title("> " + posts[postID].title, font, 30);
+    title.setFillColor(sf::Color::White);
+    title.setPosition({ 30, 90 });
+
+    //boards
+    int current = 0;
+    int comment_amount = posts[postID].comments.size();
+
+    //functional buttons
+    Button back("Back", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    back.setFont(font);
+    back.setPos({ 50, 730 });
+    Button comment("Write Comment", { 190, 40 }, 22, sf::Color(255, 128, 0), sf::Color::White);
+    comment.setFont(font);
+    comment.setPos({ 175, 730 });
+    Button pgup("<<PgUp", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    pgup.setFont(font);
+    pgup.setPos({ 425, 730 });
+    Button pgdn("PgDn>>", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    pgdn.setFont(font);
+    pgdn.setPos({ 550, 730 });
+
+    vector<Button>del_btn;
+    for (int i = 0; i < 8; i++) {
+        Button btn("X", { 25, 25 }, 20, sf::Color::Red, sf::Color::White);
+        del_btn.push_back(btn);
+        del_btn[i].setFont(font);
+        del_btn[i].setPos({ 630, (float)(205 + (60 * i)) });
+    }
+    if (permission_lv != 2) {
+        for (int i = 0; i < 8; i++) {
+            del_btn[i].btnOff();
+        }
+    }
+
+    vector<sf::Text>comments;
+    for (int i = 0; i < 8; i++) {
+        if (i < comment_amount) {
+            string t = posts[postID].comments[i].name + ":" + posts[postID].comments[i].com;
+            sf::Text comment(t, font, 30);
+            comments.push_back(comment);
+            comments[i].setFillColor(sf::Color::White);
+            comments[i].setPosition({ 50, (float)(200 + (60 * i)) });
+        }
+        else if (i >= comment_amount) {
+            sf::Text comment("", font, 30);
+            comments.push_back(comment);
+            comments[i].setFillColor(sf::Color::White);
+            comments[i].setPosition({ 50, (float)(200 + (60 * i)) });
+            del_btn[i].btnOff();
+        }
+    }
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+            case sf::Event::Closed:
+                window.close();
+                break;
+            case sf::Event::MouseMoved:
+                if (del_btn[0].isOn() && del_btn[0].isMouseOver(window)) {
+                    del_btn[0].setBgColor(sf::Color(100, 0, 0));
+                }
+                else if (del_btn[1].isOn() && del_btn[1].isMouseOver(window)) {
+                    del_btn[1].setBgColor(sf::Color(100, 0, 0));
+                }
+                else if (del_btn[2].isOn() && del_btn[2].isMouseOver(window)) {
+                    del_btn[2].setBgColor(sf::Color(100, 0, 0));
+                }
+                else if (del_btn[3].isOn() && del_btn[3].isMouseOver(window)) {
+                    del_btn[3].setBgColor(sf::Color(100, 0, 0));
+                }
+                else if (del_btn[4].isOn() && del_btn[4].isMouseOver(window)) {
+                    del_btn[4].setBgColor(sf::Color(100, 0, 0));
+                }
+                else if (del_btn[5].isOn() && del_btn[5].isMouseOver(window)) {
+                    del_btn[5].setBgColor(sf::Color(100, 0, 0));
+                }
+                else if (del_btn[6].isOn() && del_btn[6].isMouseOver(window)) {
+                    del_btn[6].setBgColor(sf::Color(100, 0, 0));
+                }
+                else if (del_btn[7].isOn() && del_btn[7].isMouseOver(window)) {
+                    del_btn[7].setBgColor(sf::Color(100, 0, 0));
+                }
+                else if (back.isMouseOver(window)) {
+                    back.setBgColor(sf::Color::Red);
+                    back.setTxtColor(sf::Color::White);
+                }
+                else if (comment.isMouseOver(window)) {
+                    comment.setBgColor(sf::Color(204, 102, 0));
+                }
+                else if (pgup.isMouseOver(window)) {
+                    pgup.setBgColor(sf::Color::Yellow);
+                }
+                else if (pgdn.isMouseOver(window)) {
+                    pgdn.setBgColor(sf::Color::Yellow);
+                }
+                else {
+                    for (int i = 0; i < 8; i++) {
+                        del_btn[i].setBgColor(sf::Color::Red);
+                    }
+                    back.setBgColor(sf::Color::White);
+                    back.setTxtColor(sf::Color::Black);
+                    comment.setBgColor(sf::Color(255, 128, 0));
+                    pgup.setBgColor(sf::Color::White);
+                    pgdn.setBgColor(sf::Color::White);
+                }
+                break;
+            case sf::Event::MouseButtonPressed:
+                if (del_btn[0].isOn() && del_btn[0].isMouseOver(window)) {
+                    //cout << "del comment no." << current + 0 << endl;
+                    return current + 0;
+                }
+                if (del_btn[1].isOn() && del_btn[1].isMouseOver(window)) {
+                    //cout << "del comment no." << current + 1 << endl;
+                    return current + 1;
+                }
+                if (del_btn[2].isOn() && del_btn[2].isMouseOver(window)) {
+                    //cout << "del comment no." << current + 2 << endl;
+                    return current + 2;
+                }
+                if (del_btn[3].isOn() && del_btn[3].isMouseOver(window)) {
+                    //cout << "del comment no." << current + 3 << endl;
+                    return current + 3;
+                }
+                if (del_btn[4].isOn() && del_btn[4].isMouseOver(window)) {
+                    //cout << "del comment no." << current + 4 << endl;
+                    return current + 4;
+                }
+                if (del_btn[5].isOn() && del_btn[5].isMouseOver(window)) {
+                    //cout << "del comment no." << current + 5 << endl;
+                    return current + 5;
+                }
+                if (del_btn[6].isOn() && del_btn[6].isMouseOver(window)) {
+                    //cout << "del comment no." << current + 6 << endl;
+                    return current + 6;
+                }
+                if (del_btn[7].isOn() && del_btn[7].isMouseOver(window)) {
+                    //cout << "del comment no." << current + 7 << endl;
+                    return current + 7;
+                }
+                if (back.isMouseOver(window)) {
+                    //cout << "back" << endl;
+                    return -1;
+                }
+                if (comment.isMouseOver(window)) {
+                    //cout << "write comment" << endl;
+                    return -100;
+                }
+                if (pgup.isMouseOver(window)) {
+                    cout << "Pgup" << endl;
+                    if (current > 0) {
+                        current -= 8;
+                        for (int i = 0; i < 8; i++) {
+                            if (i + current < comment_amount) {
+                                comments[i].setString(posts[postID].comments[i + current].name + ":" + posts[postID].comments[i + current].com);
+                                del_btn[i].btnOn();
+                            }
+                            else if (i + current >= comment_amount) {
+                                comments[i].setString("");
+                                del_btn[i].btnOff();
+                            }
+                        }
+                    }
+                }
+                if (pgdn.isMouseOver(window)) {
+                    cout << "Pgdn " << endl;
+                    if (current + 8 < comment_amount) {
+                        current += 8;
+                        for (int i = 0; i < 8; i++) {
+                            if (i + current < comment_amount) {
+                                comments[i].setString(posts[postID].comments[i + current].name + ":" + posts[postID].comments[i + current].com);
+                                del_btn[i].btnOn();
+                            }
+                            else if (i + current >= comment_amount) {
+                                comments[i].setString("");
+                                del_btn[i].btnOff();
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+        window.clear();
+
+        for (int i = 0; i < 8; i++) {
+            window.draw(comments[i]);
+        }
+        window.draw(txt_author);
+        window.draw(title);
+        back.drawTo(window);
+        comment.drawTo(window);
+        pgup.drawTo(window);
+        pgdn.drawTo(window);
+        if (permission_lv == 2) {
+            for (int i = 0; i < 8; i++) {
+                if (del_btn[i].isOn())
+                    del_btn[i].drawTo(window);
+            }
+        }
+        window.display();
+    }
+}
+
+void Viewer::leave_comment()
+{
+
 }
