@@ -2,20 +2,26 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
-#include <conio.h>
-#include <stdlib.h>
 #include "Board.h"
 
+#define DEL_KEY 8
+#define ENTER_KEY 13
+#define ESC_KEY 27
+#define DEBUG 0
+
 using namespace std;
+
 
 class Viewer
 {
 public:
+	bool isValid(string, string, vector<pair<string, string>>, int); //1.login; 2.signup
 	int menu1(); //0.Exit; 1.Log in; 2.Sign up; 3.Guest
 	int menu2(); //0.Logout; 1.View Boards; 2.Mailbox
-	int login(string&, string&, int check); //0.back to menu; 1.end successfully //check: -1.Username not exist; -2.Wrong Password
-	int signup(string&, string&, int check); //0.back to menu; 1.end successfully //check: -1.Username existed;
+	int login(string&, string&, vector<pair<string, string>>); //1.success; -1.back
+	int signup(string&, string&, vector<pair<string, string>>); //1.success; -1.back
 	void mailbox();
 	int board_select(vector<Board>, int permission_lv); //-1.back; -2.logout; -3.add board(admin); -4.del board(admin); 0~n.board ID
 	string board_add();
@@ -29,7 +35,8 @@ public:
 class Button
 {
 public:
-	bool buttonOn;
+	
+	Button() { }
 	Button(string t, sf::Vector2f size, int charSize, sf::Color bgColor, sf::Color textColor) {
 		text.setString(t);
 		text.setFillColor(textColor);
@@ -37,6 +44,11 @@ public:
 		button.setSize(size);
 		button.setFillColor(bgColor);
 		buttonOn = true;
+	}
+
+	bool isOn() {
+		if (buttonOn) return true;
+		else return false;
 	}
 
 	void btnOn() { buttonOn = true; }
@@ -83,7 +95,202 @@ public:
 		}
 		return false;
 	}
+
 private:
 	sf::RectangleShape button;
 	sf::Text text;
+	bool buttonOn;
+};
+
+class Textbox
+{
+public:
+	Textbox() { }
+	Textbox(int size, sf::Color color, bool sel) {
+		textbox.setCharacterSize(size);
+		textbox.setFillColor(color);
+		bg.setFillColor(sf::Color::White);
+		bg.setSize({500, (float)(size + 7)});
+		isSelected = sel;
+		limit = 20;
+		if (sel) {
+			textbox.setString("_");
+		}
+		else {
+			textbox.setString("");
+		}
+	}
+
+	bool isSel() {
+		if (isSelected) return true;
+		else return false;
+	}
+
+	void setFont(sf::Font& font) {
+		textbox.setFont(font);
+	}
+
+	void setPos(sf::Vector2f pos) {
+		textbox.setPosition(pos);
+		bg.setPosition(pos);
+	}
+
+	void setBoxColor(sf::Color color) {
+		bg.setFillColor(color);
+	}
+
+	void setBoxSize(sf::Vector2f size) {
+		bg.setSize(size);
+	}
+
+	void setLimit(bool ToF) {
+		haslimit = ToF;
+	}
+
+	void setLimit(bool ToF, int lim) {
+		haslimit = ToF;
+		limit = lim - 1;
+	}
+
+	void setSelected(bool sel) {
+		bool prev_stat = isSelected;
+		isSelected = sel;
+
+		if (!prev_stat && isSelected) {
+			inputLogic(65);
+			inputLogic(DEL_KEY);
+		}
+		if (!sel) {
+			string t = text.str();
+			string newstr = "";
+			for (int i = 0; i < t.length(); i++) {
+				newstr += t[i];
+			}
+			text.str("");
+			text << newstr;
+			textbox.setString(text.str());
+			setBoxColor(sf::Color(150, 150, 150));
+		}
+		else {
+			setBoxColor(sf::Color::White);
+		}
+	}
+
+	void typedOn(sf::Event input) {
+		if (isSelected) {
+			int charTyped = input.text.unicode;
+			if (charTyped < 128) {
+				if (haslimit) {
+					if (text.str().length() <= limit) {
+						inputLogic(charTyped);
+					}
+					else if (text.str().length() > limit && charTyped == DEL_KEY) {
+						delLastChar();
+					}
+				}
+				else {
+					inputLogic(charTyped);
+				}
+			}
+		}
+	}
+
+	void typedPassword(sf::Event input) {
+		if (isSelected) {
+			int charTyped = input.text.unicode;
+			if (charTyped < 128) {
+				if (haslimit) {
+					if (text.str().length() <= limit) {
+						input4password(charTyped);
+					}
+					else if (text.str().length() > limit && charTyped == DEL_KEY) {
+						pwd_delLastChar();
+					}
+				}
+				else {
+					input4password(charTyped);
+				}
+			}
+		}
+	}
+
+	bool isMouseOver(sf::RenderWindow& window) {
+		float mouseX = sf::Mouse::getPosition(window).x;
+		float mouseY = sf::Mouse::getPosition(window).y;
+		float boxX = bg.getPosition().x;
+		float boxY = bg.getPosition().y;
+		float boxW = bg.getPosition().x + bg.getLocalBounds().width;
+		float boxH = bg.getPosition().y + bg.getLocalBounds().height;
+		if (mouseX < boxW && mouseX > boxX && mouseY < boxH && mouseY > boxY) {
+			return true;
+		}
+		return false;
+	}
+
+	string getText() {
+		return text.str();
+	}
+
+	void drawTo(sf::RenderWindow& window) {
+		window.draw(bg);
+		window.draw(textbox);
+	}
+
+private:
+	sf::Text textbox;
+	sf::RectangleShape bg;
+	ostringstream text;
+	bool isSelected = false;
+	bool haslimit = false;
+	int limit;
+
+	void inputLogic(int charTyped) {
+		if (charTyped != DEL_KEY && charTyped != ENTER_KEY && charTyped != ESC_KEY) {
+			text << static_cast<char>(charTyped);
+		}
+		else if (charTyped == DEL_KEY && text.str().length() > 0) {
+			delLastChar();
+		}
+		textbox.setString(text.str() + "_");
+	}
+
+	void input4password(int charTyped) {
+		if (charTyped != DEL_KEY && charTyped != ENTER_KEY && charTyped != ESC_KEY) {
+			text << static_cast<char>(charTyped);
+		}
+		else if (charTyped == DEL_KEY && text.str().length() > 0) {
+			delLastChar();
+		}
+		string tmp = "";
+		for (int i = 0; i < text.str().length(); i++) {
+			tmp += "*";
+		}
+		textbox.setString(tmp + "_");
+	}
+
+	void delLastChar() {
+		string t = text.str();
+		string newstr = "";
+		for (int i = 0; i < t.length() - 1; i++) {
+			newstr += t[i];
+		}
+		text.str("");
+		text << newstr;
+		textbox.setString(text.str());
+	}
+
+	void pwd_delLastChar() {
+		string t = text.str();
+		string newstr = "";
+		for (int i = 0; i < t.length() - 1; i++) {
+			newstr += t[i];
+		}
+		text.str("");
+		text << newstr;
+		string tmp = "";
+		for (int i = 0; i < text.str().length(); i++) {
+			tmp += "*";
+		}
+		textbox.setString(tmp);
+	}
 };
