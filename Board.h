@@ -45,3 +45,20 @@ public:
   Board(vector<int> _post_id, string board_name);
   void load_all_post();
 };
+
+class Game1
+{
+public:
+	vector<pair<string, int>> lead_board;
+	int answer = 0;
+	int guess_count = 0;
+	Game1() { }
+	
+	void new_answer();
+	int guess(int input_number, int current_user_id);//-1 lower than answer, 0 right, 1 higher than answer, -2 for any exception.
+	void load_lead_board();
+	void write_lead_board();
+	void sort_lead_bord();
+};
+
+bool operator>(pair<string, int> left, pair<string, int> right);
