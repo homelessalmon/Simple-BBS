@@ -812,12 +812,11 @@ int Viewer::board_add(vector<Board> boards, string& name)
                 }
                 else if (enter.isMouseOver(window)) {
                     txtbox_boardname.setSelected(false);
-                    string t;
-                    t = txtbox_boardname.getText();
+                    name = txtbox_boardname.getText();
                     //cout << t << endl;
                     bool valid = true;
                     for (int i = 0; i < boards.size(); i++) {
-                        if (boards[i].board_name == t || t == "") {
+                        if (boards[i].board_name == name || name == "") {
                             valid = false;
                             errormsg.setFillColor(sf::Color::Red);
                             break;
