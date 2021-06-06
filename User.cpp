@@ -75,16 +75,18 @@ void Adiministrator::remove_board(int board_id, string reason)
 	fout.close();
 }
 
-void Adiministrator::add_post(int current_board)
+void Adiministrator::add_post(int current_board, string title_name)
 {
 	ifstream fin("posts/count.txt");
 	int count; fin >> count; fin.close();
 
-	ofstream fout("posts/count.txt", ios::out || ios::trunc);
+	ofstream fout("posts/count.txt", ios::trunc);
 	fout << count + 1; fout.close();
 
 	system(("cd.>posts/" + to_string(count) + "title.txt").c_str());
-	system(("posts\\" + to_string(count) + "title.txt").c_str());
+	fout.open("posts/" + to_string(count) + "title.txt", ios::trunc);
+	fout << title_name;
+	fout.close();
 
 	system(("cd.>posts/" + to_string(count) + "content.txt").c_str());
 	system(("posts\\" + to_string(count) + "content.txt").c_str());
@@ -99,19 +101,19 @@ void Adiministrator::add_post(int current_board)
 	
 }
 
-void Adiministrator::edit_post(int post_id, int part_select)
+void Adiministrator::edit_post_title(int post_id, string new_title)
 {
-	switch (part_select)
+	ofstream fout("posts/" + to_string(post_id) + "title.txt", ios::trunc);
+	if (fout.is_open())
 	{
-	case 0:
-		system(("posts\\" + to_string(post_id) + "title.txt").c_str());
-		break;
-	case 1:
-		system(("posts\\" + to_string(post_id) + "content.txt").c_str());
-		break;
-	default:
-		break;
+		fout << new_title;
 	}
+	fout.close();
+}
+
+void Adiministrator::edit_post_content(int post_id)
+{
+	system(("posts\\" + to_string(post_id) + "content.txt").c_str());
 }
 
 void Adiministrator::remove_post(int post_id, string reason)
@@ -189,16 +191,18 @@ Member::Member(vector<int> _postsID, int _user_id)
 	Permission_level = 1;
 }
 
-void Member::add_post(int current_board)
+void Member::add_post(int current_board, string title_name)
 {
 	ifstream fin("posts/count.txt");
 	int count; fin >> count; fin.close();
 
-	ofstream fout("posts/count.txt", ios::out || ios::trunc);
+	ofstream fout("posts/count.txt", ios::trunc);
 	fout << count + 1; fout.close();
 
 	system(("cd.>posts/" + to_string(count) + "title.txt").c_str());
-	system(("posts\\" + to_string(count) + "title.txt").c_str());
+	fout.open("posts/" + to_string(count) + "title.txt", ios::trunc);
+	fout << title_name;
+	fout.close();
 
 	system(("cd.>posts/" + to_string(count) + "content.txt").c_str());
 	system(("posts\\" + to_string(count) + "content.txt").c_str());
@@ -212,19 +216,19 @@ void Member::add_post(int current_board)
 	fout << count << endl; fout.close();
 }
 
-void Member::edit_post(int post_id, int part_select)
+void Member::edit_post_title(int post_id, string new_title)
 {
-	switch (part_select)
+	ofstream fout("posts/" + to_string(post_id) + "title.txt", ios::trunc);
+	if (fout.is_open())
 	{
-	case 0:
-		system(("posts\\" + to_string(post_id) + "title.txt").c_str());
-		break;
-	case 1:
-		system(("posts\\" + to_string(post_id) + "content.txt").c_str());
-		break;
-	default:
-		break;
+		fout << new_title;
 	}
+	fout.close();
+}
+
+void Member::edit_post_content(int post_id)
+{
+	system(("posts\\" + to_string(post_id) + "content.txt").c_str());
 }
 
 void Member::remove_post(int post_id, string reason)
