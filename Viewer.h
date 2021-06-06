@@ -32,6 +32,7 @@ public:
 	int view_comment(vector<Post> posts, int postID, int userID, int permission_lv); //-1.back; -100.leave comment; 0~n.comment to be deleted
 	int window_txtbox(string title, string info, string& input, int limit, float posX, float posY); //to input one non-empty string
 	//-1.cancel; 1.enter successfully
+	//posX & posY is for adjusting title's position, posY = 90 is recommended, posX: 0 ~ 700
 };
 
 
