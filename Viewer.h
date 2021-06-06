@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include "Board.h"
+#include "Mail.h"
 
 #define DEL_KEY 8
 #define ENTER_KEY 13
@@ -19,7 +20,7 @@ class Viewer
 public:
 	bool isValid(string, string, vector<pair<string, string>>, int); //1.login; 2.signup
 	int menu1(); //0.Exit; 1.Log in; 2.Sign up; 3.Guest
-	int menu2(); //0.Logout; 1.View Boards; 2.Mailbox
+	int menu2(int permission_lv); //0.Logout; 1.View Boards; 2.Mailbox; 99.add admin
 	int login(string&, string&, vector<pair<string, string>>); //1.success; -1.back
 	int signup(string&, string&, vector<pair<string, string>>); //1.success; -1.back
 	void game(Game1& game);
