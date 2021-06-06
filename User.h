@@ -3,6 +3,7 @@
 #include<fstream>
 #include<string>
 #include"Board.h"
+#include"Mail.h"
 
 using namespace std;
 
@@ -12,6 +13,7 @@ public:
 	vector <int> postsID;	// 紀錄建立過的post
 	int Permission_level = -1;	// 權限等級
 	int user_id = -1;
+	vector<Mail> mail_list;
 	// Other infos, e.x. comment_nums, post_num, ….
 
 	User(){}
