@@ -191,8 +191,6 @@ void BoardManager::exe() {
 	}
 }
 
-#include "BoardManager.h"
-
 void BoardManager::load_user() {
 	ifstream fin("users/count.txt");
 	int user_count; fin >> user_count; fin.close();
@@ -249,33 +247,47 @@ void BoardManager::load_board() {
 	}
 }
 
-void BoardManager::load_mail() {
+void BoardManager::load_mail()
+{
 	int mail_count = 0;
 	ifstream fin("mails/count.txt");
-	if (fin.is_open()) {
+	if (fin.is_open())
+	{
 		fin >> mail_count;
 	}
 	fin.close();
 
-	for (int i = 0; i < mail_count; i++) {
+	for (int i = 0; i < mail_count; i++)
+	{
 		fin.open("mails/" + to_string(i) + "info.txt");
-		if (fin.is_open()) {
+		if (fin.is_open())
+		{
 			string catch_string;
 			int id;
 			fin >> catch_string >> id;
 
-			if (id == current_user) {
+			if (id == current_user)
+			{
 				fin >> catch_string;
 
-				string tmp;
+				string tmp, title;
+
+				ifstream fin3("mails/" + to_string(i) + "title.txt");
+				if (fin3.is_open())
+				{
+					getline(fin3, title);
+				}
+				fin3.close();
+
 				vector<string> tmp_vector;
 				ifstream fin2("mails/" + to_string(i) + "content.txt");
-				if (fin2.is_open()) {
+				if (fin2.is_open())
+				{
 					while (getline(fin2, tmp)) { tmp_vector.push_back(tmp); }
 				}
 				fin2.close();
 
-				Mail aPost(catch_string, tmp_vector);
+				Mail aPost(catch_string, title, tmp_vector);
 				users[current_user]->mail_list.push_back(aPost);
 			}
 		}
