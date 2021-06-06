@@ -1065,7 +1065,7 @@ int Viewer::board_delete(vector<Board> boards)
     }
 }
 
-int Viewer::post_select(Board cur_board)
+int Viewer::post_select(Board cur_board, int permission_lv)
 {
     sf::RenderWindow window(sf::VideoMode(700, 800), cur_board.board_name, sf::Style::Default ^ sf::Style::Resize);
     sf::Font font;
@@ -1116,6 +1116,8 @@ int Viewer::post_select(Board cur_board)
     Button add("Add Post", { 200, 40 }, 25, sf::Color(255, 128, 0), sf::Color::White);
     add.setFont(font);
     add.setPos({ 450, 40 });
+    if (permission_lv == 0)
+        add.btnOff();
 
     while (window.isOpen()) {
         sf::Event event;
@@ -1171,7 +1173,7 @@ int Viewer::post_select(Board cur_board)
                 else if (next.isMouseOver(window)) {
                     next.setBgColor(sf::Color::Yellow);
                 }
-                else if (add.isMouseOver(window)) {
+                else if (add.isOn() && add.isMouseOver(window)) {
                     add.setBgColor(sf::Color(204, 102, 0));
                 }
                 else {
@@ -1261,7 +1263,7 @@ int Viewer::post_select(Board cur_board)
                         }
                     }
                 }
-                if (add.isMouseOver(window)) {
+                if (add.isOn() && add.isMouseOver(window)) {
                     return -3;
                 }
                 break;
@@ -1276,7 +1278,8 @@ int Viewer::post_select(Board cur_board)
         logout.drawTo(window);
         prev.drawTo(window);
         next.drawTo(window);
-        add.drawTo(window);
+        if (add.isOn())
+            add.drawTo(window);
         window.draw(title);
         window.display();
     }
@@ -1506,6 +1509,9 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
         for (int i = 0; i < 8; i++) {
             del_btn[i].btnOff();
         }
+        if (permission_lv == 0) {
+            comment.btnOff();
+        }
     }
 
     vector<sf::Text>comments;
@@ -1562,7 +1568,7 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
                     back.setBgColor(sf::Color::Red);
                     back.setTxtColor(sf::Color::White);
                 }
-                else if (comment.isMouseOver(window)) {
+                else if (comment.isOn() && comment.isMouseOver(window)) {
                     comment.setBgColor(sf::Color(204, 102, 0));
                 }
                 else if (pgup.isMouseOver(window)) {
@@ -1619,7 +1625,7 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
                     //cout << "back" << endl;
                     return -1;
                 }
-                if (comment.isMouseOver(window)) {
+                if (comment.isOn() && comment.isMouseOver(window)) {
                     //cout << "write comment" << endl;
                     return -100;
                 }
@@ -1667,7 +1673,8 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
         window.draw(txt_author);
         window.draw(title);
         back.drawTo(window);
-        comment.drawTo(window);
+        if (comment.isOn())
+            comment.drawTo(window);
         pgup.drawTo(window);
         pgdn.drawTo(window);
         if (permission_lv == 2) {
