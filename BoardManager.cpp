@@ -137,8 +137,8 @@ void BoardManager::exe() {
 				break;
 			}
 		}break;
-
 		case BOARD: {
+			boards[current_board].load_all_post();
 			current_post = -1;
 			int op = viewer.post_select(boards[current_board]);
 			switch (op) {
@@ -152,6 +152,7 @@ void BoardManager::exe() {
 				string title;
 				viewer.window_txtbox("New post", "Please input the title", title, 28, 200, 90);
 				users[current_user]->add_post(current_board, title);
+				boards[current_board].load_all_post();
 			}break;
 			default:
 				current_post = op;
@@ -181,10 +182,15 @@ void BoardManager::exe() {
 				break;
 			case -4:
 				users[current_user]->edit_post_content(current_post);
+				boards[current_board].load_all_post();
 				break;
-			case -5:
-				users[current_user]->remove_post(current_post, "961pro");
-				break;
+			case -5: {
+				string reason;
+				viewer.window_txtbox("Delete Post", "Please input the reason", reason, 28, 100, 90);
+				users[current_user]->remove_post(current_post, "reason");
+				boards[current_board].load_all_post();
+
+			}break;
 			}
 		}break;
 		case COMMENT: {
