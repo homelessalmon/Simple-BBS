@@ -23,14 +23,16 @@ public:
 	int login(string&, string&, vector<pair<string, string>>); //1.success; -1.back
 	int signup(string&, string&, vector<pair<string, string>>); //1.success; -1.back
 	void mailbox();
+	void sendMail();
 	int board_select(vector<Board>, int permission_lv); //-1.back; -2.logout; -3.add board(admin); -4.del board(admin); 0~n.board ID
 	int board_add(vector<Board>, string&);// -1.back(no add); 1.add successfully
 	int board_delete(vector<Board>); // -1.back(no delete); 0~n.board to be deleted
 	int post_select(Board); //-1.back; -2.logout; 0~n.post ID
-	int view_post();
-	int view_comment();
-	string leave_comment();
+	int view_post(vector<Post> posts, string author, int postID, int boardID, int userID, int permission_lv); //-1.back; -2.logout; -3.view comment; -4.edit; -5.del_post;
+	int view_comment(vector<Post> posts, int postID, int userID, int permission_lv); //-1.back; -100.leave comment; 0~n.comment to be deleted
+	void leave_comment();
 };
+
 
 class Button
 {
@@ -101,6 +103,7 @@ private:
 	sf::Text text;
 	bool buttonOn;
 };
+
 
 class Textbox
 {
