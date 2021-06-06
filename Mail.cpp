@@ -1,12 +1,13 @@
 #include "Mail.h"
 
-Mail::Mail(string _from, vector<string> _content)
+Mail::Mail(string _from, string _title, vector<string> _content)
 {
 	from = _from;
+	title = _title;
 	content = _content;
 }
 
-bool send_mail(string receiver_user_name, int sender_user_id)//return false if receiver not found
+bool send_mail(string receiver_user_name, int sender_user_id,string title)//return false if receiver not found
 {
 	ifstream fin("users/count.txt");
 	int user_count, receiver_user_id = -1;
@@ -64,11 +65,17 @@ bool send_mail(string receiver_user_name, int sender_user_id)//return false if r
 		}
 		fout.close();
 
+		system(("cd.>mails/" + to_string(mail_count) + "title.txt").c_str());
+		fout.open("mails/" + to_string(mail_count) + "title.txt");
+		if (fout.is_open())
+		{
+			fout << title;
+		}
+		fout.close();
+
 		system(("cd.>mails/" + to_string(mail_count) + "content.txt").c_str());
 		system(("mails\\" + to_string(mail_count) + "content.txt").c_str());
 
 		return true;
 	}
 }
-
-
