@@ -444,11 +444,6 @@ void Viewer::mailbox()
 
 }
 
-void Viewer::sendMail()
-{
-
-}
-
 int Viewer::board_select(vector<Board> boards, int permission_lv)
 {
     sf::RenderWindow window(sf::VideoMode(700, 800), "Boards", sf::Style::Default ^ sf::Style::Resize);
@@ -813,7 +808,7 @@ int Viewer::board_add(vector<Board> boards, string& name)
                 else if (enter.isMouseOver(window)) {
                     txtbox_boardname.setSelected(false);
                     name = txtbox_boardname.getText();
-                    //cout << t << endl;
+                    //cout << name << endl;
                     bool valid = true;
                     for (int i = 0; i < boards.size(); i++) {
                         if (boards[i].board_name == name || name == "") {
@@ -1074,6 +1069,9 @@ int Viewer::post_select(Board cur_board)
     Button next("Next>>", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
     next.setFont(font);
     next.setPos({ 550, 730 });
+    Button add("Add Post", { 200, 40 }, 25, sf::Color(255, 128, 0), sf::Color::White);
+    add.setFont(font);
+    add.setPos({ 450, 40 });
 
     while (window.isOpen()) {
         sf::Event event;
@@ -1129,6 +1127,9 @@ int Viewer::post_select(Board cur_board)
                 else if (next.isMouseOver(window)) {
                     next.setBgColor(sf::Color::Yellow);
                 }
+                else if (add.isMouseOver(window)) {
+                    add.setBgColor(sf::Color(204, 102, 0));
+                }
                 else {
                     for (int i = 0; i < 8; i++) {
                         post_btn[i].setBgColor(sf::Color::Black);
@@ -1140,6 +1141,7 @@ int Viewer::post_select(Board cur_board)
                     logout.setTxtColor(sf::Color::Black);
                     prev.setBgColor(sf::Color::White);
                     next.setBgColor(sf::Color::White);
+                    add.setBgColor(sf::Color(255, 128, 0));
                 }
                 break;
             case sf::Event::MouseButtonPressed:
@@ -1265,6 +1267,9 @@ int Viewer::post_select(Board cur_board)
                         }
                     }
                 }
+                if (add.isMouseOver(window)) {
+                    return -3;
+                }
 #endif
                 break;
             }
@@ -1278,6 +1283,7 @@ int Viewer::post_select(Board cur_board)
         logout.drawTo(window);
         prev.drawTo(window);
         next.drawTo(window);
+        add.drawTo(window);
         window.draw(title);
         window.display();
     }
