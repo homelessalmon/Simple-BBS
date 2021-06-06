@@ -176,6 +176,34 @@ public:
 		}
 	}
 
+	void pwd_setSelected(bool sel) {
+		bool prev_stat = isSelected;
+		isSelected = sel;
+
+		if (!prev_stat && isSelected) {
+			input4password(65);
+			input4password(DEL_KEY);
+		}
+		if (!sel) {
+			string t = text.str();
+			string newstr = "";
+			for (int i = 0; i < t.length(); i++) {
+				newstr += t[i];
+			}
+			text.str("");
+			text << newstr;
+			string tmp = "";
+			for (int i = 0; i < text.str().length(); i++) {
+				tmp += "*";
+			}
+			textbox.setString(tmp);
+			setBoxColor(sf::Color(150, 150, 150));
+		}
+		else {
+			setBoxColor(sf::Color::White);
+		}
+	}
+
 	void typedOn(sf::Event input) {
 		if (isSelected) {
 			int charTyped = input.text.unicode;
@@ -259,7 +287,7 @@ private:
 			text << static_cast<char>(charTyped);
 		}
 		else if (charTyped == DEL_KEY && text.str().length() > 0) {
-			delLastChar();
+			pwd_delLastChar();
 		}
 		string tmp = "";
 		for (int i = 0; i < text.str().length(); i++) {
@@ -287,6 +315,7 @@ private:
 		}
 		text.str("");
 		text << newstr;
+
 		string tmp = "";
 		for (int i = 0; i < text.str().length(); i++) {
 			tmp += "*";
