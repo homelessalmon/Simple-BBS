@@ -24,7 +24,7 @@ public:
 	int signup(string&, string&, vector<pair<string, string>>); //1.success; -1.back
 	void mailbox();
 	int board_select(vector<Board>, int permission_lv); //-1.back; -2.logout; -3.add board(admin); -4.del board(admin); 0~n.board ID
-	int board_add(vector<Board>, string&);
+	int board_add(vector<Board>, string&);// -1.back(no add); 1.add successfully
 	int board_delete(vector<Board>); // -1.back(no delete); 0~n.board to be deleted
 	int post_select(Board); //-1.back; -2.logout; 0~n.post ID
 	int view_post();
