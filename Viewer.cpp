@@ -191,10 +191,10 @@ int Viewer::login(string& username, string& password, vector<pair<string, string
             case sf::Event::MouseButtonPressed:
                 if (txtbox_username.isMouseOver(window)) {
                     txtbox_username.setSelected(true);
-                    txtbox_password.setSelected(false);
+                    txtbox_password.pwd_setSelected(false);
                 }
                 else if (txtbox_password.isMouseOver(window)) {
-                    txtbox_password.setSelected(true);
+                    txtbox_password.pwd_setSelected(true);
                     txtbox_username.setSelected(false);
                 }
                 else if (enter.isMouseOver(window)) {
@@ -210,17 +210,17 @@ int Viewer::login(string& username, string& password, vector<pair<string, string
                         errormsg.setFillColor(sf::Color::Red);
                     }
                     txtbox_username.setSelected(false);
-                    txtbox_password.setSelected(false);
+                    txtbox_password.pwd_setSelected(false);
                 }
                 else if (cancel.isMouseOver(window)) {
                     //cout << "cancel" << endl;
                     txtbox_username.setSelected(false);
-                    txtbox_password.setSelected(false);
+                    txtbox_password.pwd_setSelected(false);
                     return -1;
                 }
                 else {
                     txtbox_username.setSelected(false);
-                    txtbox_password.setSelected(false);
+                    txtbox_password.pwd_setSelected(false);
                 }
                 break;
             }
