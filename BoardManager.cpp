@@ -172,7 +172,7 @@ void BoardManager::exe() {
 			else {
 				permission = users[current_user]->Permission_level;
 			}
-			int op = viewer.view_post(boards[current_board].all_Post, return_post_author(current_post), index, current_board, current_user, permission);
+			int op = viewer.view_post(boards[current_board].all_Post, return_post_author(current_post), return_post_author_id(current_post), index, current_board, current_user, permission);
 			switch (op) {
 			case -1:
 				state = BOARD;
