@@ -122,7 +122,7 @@ void BoardManager::exe() {
 		}break;
 
 		case DELETE_BOARD: {
-			string reason;
+			string reason = "deleted";
 			int op = viewer.board_delete(boards);
 			switch (op) {
 			case -1:
@@ -130,7 +130,6 @@ void BoardManager::exe() {
 				state = SELECT_BOARD;
 				break;
 			default:
-				viewer.window_txtbox("Delete Board", "Please input the reason", reason, 28, 100, 90);
 				users[current_user]->remove_board(op, reason);
 				load_board();
 				state = SELECT_BOARD;
@@ -150,9 +149,11 @@ void BoardManager::exe() {
 				break;
 			case -3: {
 				string title;
-				viewer.window_txtbox("New post", "Please input the title", title, 28, 200, 90);
-				users[current_user]->add_post(current_board, title);
-				boards[current_board].load_all_post();
+				int boxop = viewer.window_txtbox("New post", "Please input the title", title, 28, 200, 90);
+				if (boxop == 1) {
+					users[current_user]->add_post(current_board, title);
+					boards[current_board].load_all_post();
+				}
 			}break;
 			default:
 				current_post = op;
@@ -186,10 +187,11 @@ void BoardManager::exe() {
 				break;
 			case -5: {
 				string reason;
-				viewer.window_txtbox("Delete Post", "Please input the reason", reason, 28, 100, 90);
-				users[current_user]->remove_post(current_post, "reason");
-				boards[current_board].load_all_post();
-
+				int boxop = viewer.window_txtbox("Delete Post", "Please input the reason", reason, 28, 100, 90);
+				if (boxop == 1) {
+					users[current_user]->remove_post(current_post, "reason");
+					boards[current_board].load_all_post();
+				}
 			}break;
 			}
 		}break;
