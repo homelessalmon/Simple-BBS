@@ -115,7 +115,7 @@ void BoardManager::exe() {
 				state = SELECT_BOARD;
 				break;
 			case -1:
-				MessageBox(NULL, L"Duplicated Board Name", NULL, MB_ICONHAND | MB_OK);
+				//MessageBox(NULL, L"Duplicated Board Name", NULL, MB_ICONHAND | MB_OK);
 				state = SELECT_BOARD;
 				break;
 			}
@@ -137,6 +137,8 @@ void BoardManager::exe() {
 			}
 		}break;
 		case BOARD: {
+			load_user();
+			load_board();
 			boards[current_board].load_all_post();
 			current_post = -1;
 			int op = viewer.post_select(boards[current_board]);
@@ -196,7 +198,30 @@ void BoardManager::exe() {
 			}
 		}break;
 		case COMMENT: {
-			break;
+			int index = post_id_to_index(current_post, boards, current_board);
+			int permission = 0;
+			if (current_user == -1) {
+				permission = 0;
+			}
+			else {
+				permission = users[current_user]->Permission_level;
+			}
+			int op = viewer.view_comment(boards[current_board].all_Post, index, current_user, permission);
+			switch (op) {
+			case -1:
+				break;
+			case -100: {
+				string reason;
+				int boxop = viewer.window_txtbox("Post Comment", "Please input the comment", reason, 28, 100, 90);
+				if (boxop == 1) {
+					users[current_user]->add_comment(current_post, current_user, "reason");
+					boards[current_board].load_all_post();
+				}
+			}break;
+			default:
+				//users[current_user]->remove_comment(current_post, current_user, "reason");
+				break;
+			}
 		}
 
 		default:
@@ -325,6 +350,16 @@ string BoardManager::return_post_author(int post_id) {
 			if (post_id == users[i]->postsID[j]) {
 				vector<pair<string, string>> name_list = return_name_and_password();
 				return name_list[i].first;
+			}
+		}
+	}
+}
+
+int BoardManager::return_post_author_id(int post_id) {
+	for (int i = 0; i < users.size(); i++) {
+		for (int j = 0; j < users[i]->postsID.size(); j++) {
+			if (post_id == users[i]->postsID[j]) {
+				return i;
 			}
 		}
 	}
