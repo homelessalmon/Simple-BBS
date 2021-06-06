@@ -59,7 +59,7 @@ void BoardManager::exe() {
 			}
 		}break;
 		case MENU_PERSONAL: {
-			int op = viewer.menu2();
+			int op = viewer.menu2(users[current_user]->Permission_level);
 			switch (op) {
 			case 0:
 				state = MENU;
