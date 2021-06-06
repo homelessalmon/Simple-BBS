@@ -444,6 +444,11 @@ void Viewer::mailbox()
 
 }
 
+void Viewer::view_mail()
+{
+
+}
+
 int Viewer::board_select(vector<Board> boards, int permission_lv)
 {
     sf::RenderWindow window(sf::VideoMode(700, 800), "Boards", sf::Style::Default ^ sf::Style::Resize);
@@ -459,12 +464,20 @@ int Viewer::board_select(vector<Board> boards, int permission_lv)
     
     //boards
     int current = 0;
-    int board_amount = boards.size();
-    //bool btnOn[8] = { true, true, true, true, true, true, true, true };
+    vector<int> validVal;
+    vector<Board> validBoard;
+    for (int i = 0; i < boards.size(); i++) {
+        if (!boards[i].is_removed) {
+            validBoard.push_back(boards[i]);
+            validVal.push_back(i);
+        }
+    }
+    int board_amount = validBoard.size();
+    
     vector<Button>board_btn;
     for (int i = 0; i < 8; i++) {
         if (i < board_amount) {
-            Button btn(boards[i].board_name, { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
+            Button btn(validBoard[i].board_name, { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
             board_btn.push_back(btn);
             board_btn[i].setFont(font);
             board_btn[i].setPos({ 20, (float)(130 + (70 * i)) });
@@ -646,28 +659,28 @@ int Viewer::board_select(vector<Board> boards, int permission_lv)
                 }
 #else
                 if (board_btn[0].isOn() && board_btn[0].isMouseOver(window)) {
-                    return current;
+                    return validVal[current];
                 }
                 if (board_btn[1].isOn() && board_btn[1].isMouseOver(window)) {
-                    return current + 1;
+                    return validVal[current + 1];
                 }
                 if (board_btn[2].isOn() && board_btn[2].isMouseOver(window)) {
-                    return current + 2;
+                    return validVal[current + 2];
                 }
                 if (board_btn[3].isOn() && board_btn[3].isMouseOver(window)) {
-                    return current + 3;
+                    return validVal[current + 3];
                 }
                 if (board_btn[4].isOn() && board_btn[4].isMouseOver(window)) {
-                    return current + 4;
+                    return validVal[current + 4];
                 }
                 if (board_btn[5].isOn() && board_btn[5].isMouseOver(window)) {
-                    return current + 5;
+                    return validVal[current + 5];
                 }
                 if (board_btn[6].isOn() && board_btn[6].isMouseOver(window)) {
-                    return current + 6;
+                    return validVal[current + 6];
                 }
                 if (board_btn[7].isOn() && board_btn[7].isMouseOver(window)) {
-                    return current + 7;
+                    return validVal[current + 7];
                 }
                 if (back.isMouseOver(window)) {
                     return -1;
@@ -682,7 +695,7 @@ int Viewer::board_select(vector<Board> boards, int permission_lv)
                         for (int i = 0; i < 8; i++) {
                             if (i + current < board_amount) {
                                 board_btn[i].btnOn();
-                                board_btn[i].setText(boards[i + current].board_name);
+                                board_btn[i].setText(validBoard[i + current].board_name);
                             }
                             else if (i + current >= board_amount) {
                                 board_btn[i].btnOff();
@@ -698,7 +711,7 @@ int Viewer::board_select(vector<Board> boards, int permission_lv)
                         for (int i = 0; i < 8; i++) {
                             if (i + current < board_amount) {
                                 board_btn[i].btnOn();
-                                board_btn[i].setText(boards[i + current].board_name);
+                                board_btn[i].setText(validBoard[i + current].board_name);
                             }
                             else if (i + current >= board_amount) {
                                 board_btn[i].btnOff();
