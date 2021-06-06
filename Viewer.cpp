@@ -1369,7 +1369,7 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
     del.setPos({ 550, 40 });
     if (myPost) {}
     else if (permission_lv == 2) {
-        del.btnOff();
+        edit.btnOff();
     }
     else {
         edit.btnOff();
