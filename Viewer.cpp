@@ -365,7 +365,7 @@ int Viewer::signup(string& username, string& password, vector<pair<string, strin
     }
 }
 
-int Viewer::menu2()
+int Viewer::menu2(int permission_lv)
 {
     sf::RenderWindow window(sf::VideoMode(700, 800), "Welcome!", sf::Style::Default ^ sf::Style::Resize);
     sf::Font font;
@@ -387,6 +387,11 @@ int Viewer::menu2()
     Button logout("Log out", { 400, 70 }, 50, sf::Color::Black, sf::Color::White);
     logout.setFont(font);
     logout.setPos({ 150, 420 });
+    Button addAdmin("ADD ADMIN", { 400, 70 }, 50, sf::Color::Black, sf::Color::White);
+    addAdmin.setFont(font);
+    addAdmin.setPos({ 150, 520 });
+    if (permission_lv != 2)
+        addAdmin.btnOff();
 
     while (window.isOpen()) {
         sf::Event event;
@@ -394,6 +399,7 @@ int Viewer::menu2()
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                return 0;
                 break;
             case sf::Event::MouseMoved:
                 if (board.isMouseOver(window)) {
@@ -408,6 +414,10 @@ int Viewer::menu2()
                     logout.setBgColor(sf::Color::White);
                     logout.setTxtColor(sf::Color::Black);
                 }
+                else if (addAdmin.isOn() && addAdmin.isMouseOver(window)) {
+                    addAdmin.setBgColor(sf::Color::White);
+                    addAdmin.setTxtColor(sf::Color::Black);
+                }
                 else {
                     board.setBgColor(sf::Color::Black);
                     board.setTxtColor(sf::Color::White);
@@ -415,6 +425,8 @@ int Viewer::menu2()
                     mailbox.setTxtColor(sf::Color::White);
                     logout.setBgColor(sf::Color::Black);
                     logout.setTxtColor(sf::Color::White);
+                    addAdmin.setBgColor(sf::Color::Black);
+                    addAdmin.setTxtColor(sf::Color::White);
                 }
                 break;
             case sf::Event::MouseButtonPressed:
@@ -427,13 +439,19 @@ int Viewer::menu2()
                 if (mailbox.isMouseOver(window)) {
                     return 2;
                 }
+                if (addAdmin.isOn() && addAdmin.isMouseOver(window)) {
+                    return 99;
+                }
                 break;
             }
         }
 
+        window.clear();
         board.drawTo(window);
         mailbox.drawTo(window);
         logout.drawTo(window);
+        if (addAdmin.isOn()) 
+            addAdmin.drawTo(window);
         window.draw(title);
         window.display();
     }
@@ -1064,7 +1082,12 @@ int Viewer::post_select(Board cur_board)
     vector<Button>post_btn;
     for (int i = 0; i < 8; i++) {
         if (i < post_amount) {
-            Button btn(cur_board.all_Post[i].title, { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
+            string t;
+            if (cur_board.all_Post[i].title == "-1402834659875121315.1")
+                t = "Post Deleted";
+            else
+                t = cur_board.all_Post[i].title;
+            Button btn(t, { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
             post_btn.push_back(btn);
             post_btn[i].setFont(font);
             post_btn[i].setPos({ 20, (float)(130 + (70 * i)) });
@@ -1166,66 +1189,6 @@ int Viewer::post_select(Board cur_board)
                 }
                 break;
             case sf::Event::MouseButtonPressed:
-#if DEBUG
-                if (post_btn[0].isOn() && post_btn[0].isMouseOver(window)) {
-                    cout << "Post " << cur_board.post_id[current] << endl;
-                }
-                if (post_btn[1].isOn() && post_btn[1].isMouseOver(window)) {
-                    cout << "Post " << cur_board.post_id[current + 1] << endl;
-                }
-                if (post_btn[2].isOn() && post_btn[2].isMouseOver(window)) {
-                    cout << "Post " << cur_board.post_id[current + 2] << endl;
-                }
-                if (post_btn[3].isOn() && post_btn[3].isMouseOver(window)) {
-                    cout << "Post " << cur_board.post_id[current + 3] << endl;
-                }
-                if (post_btn[4].isOn() && post_btn[4].isMouseOver(window)) {
-                    cout << "Post " << cur_board.post_id[current + 4] << endl;
-                }
-                if (post_btn[5].isOn() && post_btn[5].isMouseOver(window)) {
-                    cout << "Post " << cur_board.post_id[current + 5] << endl;
-                }
-                if (post_btn[6].isOn() && post_btn[6].isMouseOver(window)) {
-                    cout << "Post " << cur_board.post_id[current + 6] << endl;
-                }
-                if (post_btn[7].isOn() && post_btn[7].isMouseOver(window)) {
-                    cout << "Post " << cur_board.post_id[current + 7] << endl;
-                }
-                if (back.isMouseOver(window)) {
-                    cout << "back" << endl;
-                }
-                if (logout.isMouseOver(window)) {
-                    cout << "Logout" << endl;
-                }
-                if (prev.isMouseOver(window)) {
-                    cout << "Prev" << endl;
-                    if (current > 0) current -= 8;
-                    for (int i = 0; i < 8; i++) {
-                        if (i + current < post_amount) {
-                            post_btn[i].btnOn();
-                            post_btn[i].setText(cur_board.all_Post[i + current].title[0]);
-                        }
-                        else if (i + current >= post_amount) {
-                            post_btn[i].btnOff();
-                            post_btn[i].setText("");
-                        }
-                    }
-                }
-                if (next.isMouseOver(window)) {
-                    cout << "Next " << endl;
-                    if (current + 8 < post_amount) current += 8;
-                    for (int i = 0; i < 8; i++) {
-                        if (i + current < post_amount) {
-                            post_btn[i].btnOn();
-                            post_btn[i].setText(cur_board.all_Post[i + current].title[0]);
-                        }
-                        else if (i + current >= post_amount) {
-                            post_btn[i].btnOff();
-                            post_btn[i].setText("");
-                        }
-                    }
-                }
-#else
                 if (post_btn[0].isOn() && post_btn[0].isMouseOver(window)) {
                     return cur_board.post_id[current];
                 }
@@ -1262,8 +1225,13 @@ int Viewer::post_select(Board cur_board)
                         current -= 8;
                         for (int i = 0; i < 8; i++) {
                             if (i + current < post_amount) {
+                                string t;
+                                if (cur_board.all_Post[i + current].title == "-1402834659875121315.1")
+                                    t = "Post Deleted";
+                                else
+                                    t = cur_board.all_Post[i + current].title;
                                 post_btn[i].btnOn();
-                                post_btn[i].setText(cur_board.all_Post[i + current].title);
+                                post_btn[i].setText(t);
                             }
                             else if (i + current >= post_amount) {
                                 post_btn[i].btnOff();
@@ -1278,8 +1246,13 @@ int Viewer::post_select(Board cur_board)
                         current += 8;
                         for (int i = 0; i < 8; i++) {
                             if (i + current < post_amount) {
+                                string t;
+                                if (cur_board.all_Post[i + current].title == "-1402834659875121315.1")
+                                    t = "Post Deleted";
+                                else
+                                    t = cur_board.all_Post[i + current].title;
                                 post_btn[i].btnOn();
-                                post_btn[i].setText(cur_board.all_Post[i + current].title);
+                                post_btn[i].setText(t);
                             }
                             else if (i + current >= post_amount) {
                                 post_btn[i].btnOff();
@@ -1291,7 +1264,6 @@ int Viewer::post_select(Board cur_board)
                 if (add.isMouseOver(window)) {
                     return -3;
                 }
-#endif
                 break;
             }
         }
@@ -1318,8 +1290,9 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
     bool myPost;
     if (authorID == userID) myPost = true;
     else myPost = false;
-
     string a = "Author: " + author, t = "Title: " + posts[postID].title;
+    if (posts[postID].title == "-1402834659875121315.1")
+        t = "Post Deleted";
     sf::Text txt_author(a, font, 30);
     txt_author.setFillColor(sf::Color::Red);
     txt_author.setPosition({ 30, 45 });
@@ -1485,10 +1458,8 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
         comment.drawTo(window);
         pgup.drawTo(window);
         pgdn.drawTo(window);
-        if (permission_lv == 2) {
-            edit.drawTo(window);
-            del.drawTo(window);
-        }
+        if (edit.isOn()) edit.drawTo(window);
+        if (del.isOn()) del.drawTo(window);
         window.display();
     }
 }
