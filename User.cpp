@@ -67,7 +67,7 @@ void Adiministrator::edit_board(int board_id, string new_name)
 
 void Adiministrator::remove_board(int board_id, string reason)
 {
-	ofstream fout("board/" + to_string(board_id) + ".txt", ios::trunc);
+	ofstream fout("boards/" + to_string(board_id) + ".txt", ios::trunc);
 	if (fout.is_open())
 	{
 		fout << REMOVE << endl << reason;
