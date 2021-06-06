@@ -59,7 +59,14 @@ void BoardManager::exe() {
 			}
 		}break;
 		case MENU_PERSONAL: {
-			int op = viewer.menu2(users[current_user]->Permission_level);
+			int permission;
+			if (current_user == -1) { //GUEST
+				permission = 0;
+			}
+			else {
+				permission = users[current_user]->Permission_level;
+			}
+			int op = viewer.menu2(permission);
 			switch (op) {
 			case 0:
 				state = MENU;
@@ -137,11 +144,18 @@ void BoardManager::exe() {
 			}
 		}break;
 		case BOARD: {
+			int permission;
+			if (current_user == -1) { //GUEST
+				permission = 0;
+			}
+			else {
+				permission = users[current_user]->Permission_level;
+			}
 			load_user();
 			load_board();
 			boards[current_board].load_all_post();
 			current_post = -1;
-			int op = viewer.post_select(boards[current_board]);
+			int op = viewer.post_select(boards[current_board], permission);
 			switch (op) {
 			case -1:
 				state = SELECT_BOARD;
