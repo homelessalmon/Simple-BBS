@@ -3,6 +3,8 @@
 #include<vector>
 #include<fstream>
 #include<sstream>
+#include<cstdlib>
+#include<ctime>
 
 using namespace std;
 
@@ -22,13 +24,13 @@ public:
 class Post
 {
 public:
-  vector<string> title;
+  string title = REMOVE;
   vector<string> content;
   vector<Comment> comments;
   bool is_removed = false;
 
   Post() {  }
-  Post(vector<string> _title, vector<string> _content, vector<Comment> _comments);
+  Post(string _title, vector<string> _content, vector<Comment> _comments);
   void load_post(int post_id);
 };
 
