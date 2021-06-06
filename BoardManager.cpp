@@ -123,3 +123,18 @@ vector<pair<string, string>> BoardManager::return_name_and_password()
 	}
 	return return_list;
 }
+
+string BoardManager::return_post_author(int post_id)
+{
+	for (int i = 0; i < users.size(); i++)
+	{
+		for (int j = 0; j < users[i]->postsID.size(); j++)
+		{
+			if (post_id == users[i]->postsID[j])
+			{
+				vector<pair<string, string>> name_list = return_name_and_password();
+				return name_list[i].first;
+			}
+		}
+	}
+}
