@@ -29,4 +29,5 @@ public:
     void load_user();
     void load_board();
     void load_mail();//bound to current users,after calling this function,can use vector users[current_user]->mail
+    vector<pair<string, string>> return_name_and_password();
 };
