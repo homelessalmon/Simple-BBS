@@ -768,7 +768,7 @@ int Viewer::board_add(vector<Board> boards, string& name)
     Textbox txtbox_boardname(30, sf::Color::Black, false);
     txtbox_boardname.setFont(font);
     txtbox_boardname.setPos({ 100, 300 });
-    txtbox_boardname.setLimit(true, 20);
+    txtbox_boardname.setLimit(true, 15);
 
 
     Button enter("Enter", { 130, 65 }, 30, sf::Color::White, sf::Color::Black);
@@ -1676,7 +1676,98 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
     }
 }
 
-void Viewer::leave_comment()
+int Viewer::window_txtbox(string title, string info, string& input, int limit, float posX, float posY)
 {
+    sf::RenderWindow window(sf::VideoMode(700, 600), "add board", sf::Style::Default ^ sf::Style::Resize);
+    sf::Font font;
+    font.loadFromFile("consola.ttf");
 
+    sf::Text txt_title(title, font, 70);
+    sf::Text txt_info(info, font, 30);
+    sf::Text errormsg("Enter something...", font, 20);
+    txt_title.setFillColor(sf::Color::Red);
+    txt_title.setPosition({ posX, posY });
+    txt_info.setFillColor(sf::Color::White);
+    txt_info.setPosition({ 100, 245 });
+    errormsg.setFillColor(sf::Color::Black);
+    errormsg.setPosition({ 250, 350 });
+
+    Textbox txtbox_input(30, sf::Color::Black, false);
+    txtbox_input.setFont(font);
+    txtbox_input.setPos({ 100, 295 });
+    txtbox_input.setLimit(true, limit);
+
+
+    Button enter("Enter", { 130, 65 }, 30, sf::Color::White, sf::Color::Black);
+    enter.setFont(font);
+    enter.setPos({ 150, 430 });
+    Button cancel("Cancel", { 130, 65 }, 30, sf::Color::White, sf::Color::Black);
+    cancel.setFont(font);
+    cancel.setPos({ 400, 430 });
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+            case sf::Event::Closed:
+                window.close();
+                break;
+            case sf::Event::TextEntered:
+                if (txtbox_input.isSel()) {
+                    txtbox_input.typedOn(event);
+                }
+                break;
+            case sf::Event::MouseMoved:
+                if (enter.isMouseOver(window)) {
+                    enter.setTxtColor(sf::Color::White);
+                    enter.setBgColor(sf::Color(0, 204, 0));
+                }
+                else if (cancel.isMouseOver(window)) {
+                    cancel.setTxtColor(sf::Color::White);
+                    cancel.setBgColor(sf::Color::Red);
+                }
+                else {
+                    enter.setTxtColor(sf::Color::Black);
+                    enter.setBgColor(sf::Color::White);
+                    cancel.setTxtColor(sf::Color::Black);
+                    cancel.setBgColor(sf::Color::White);
+                }
+                break;
+            case sf::Event::MouseButtonPressed:
+                if (txtbox_input.isMouseOver(window)) {
+                    txtbox_input.setSelected(true);
+                }
+                else if (enter.isMouseOver(window)) {
+                    txtbox_input.setSelected(false);
+                    input = txtbox_input.getText();
+                    if (input != "") {
+                        errormsg.setFillColor(sf::Color::Black);
+                        //cout << input << endl;
+                        return 1;
+                    }
+                    else {
+                        errormsg.setFillColor(sf::Color::Red);
+                    }
+                }
+                else if (cancel.isMouseOver(window)) {
+                    //cout << "cancel" << endl;
+                    txtbox_input.setSelected(false);
+                    return -1;
+                }
+                else {
+                    txtbox_input.setSelected(false);
+                }
+                break;
+            }
+        }
+
+        window.clear();
+        window.draw(txt_title);
+        window.draw(txt_info);
+        window.draw(errormsg);
+        txtbox_input.drawTo(window);
+        enter.drawTo(window);
+        cancel.drawTo(window);
+        window.display();
+    }
 }
