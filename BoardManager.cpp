@@ -213,7 +213,7 @@ void BoardManager::exe() {
 					boxop = viewer.window_txtbox("Delete Post", "Please input the reason", reason, 28, 100, 90);
 				}
 				if (boxop == 1) {
-					users[current_user]->remove_post(current_post, "reason");
+					users[current_user]->remove_post(current_post, reason);
 					load_user();
 					load_board();
 					boards[current_board].load_all_post();
