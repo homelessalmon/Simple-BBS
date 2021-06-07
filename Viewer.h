@@ -24,7 +24,7 @@ public:
 	int signup(string&, string&, vector<pair<string, string>>); //1.success; -1.back
 	int mailbox(vector<Mail>mails); //-1.back; -2.logout; -3.sendMail; 0~n.view mailID
 	int viewMail(vector<Mail>mails, int mailID); //-1.back; 
-	void sendMail(string receiver_user_name, int myID, string title);
+	void sendMail(int myID);
 	void senderr();
 	int board_select(vector<Board>, int permission_lv); //-1.back; -2.logout; -3.add board(admin); -4.del board(admin); 0~n.board ID
 	int board_add(vector<Board>, string&); // -1.back(no add); 1.add successfully
