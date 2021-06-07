@@ -74,7 +74,7 @@ void BoardManager::exe() {
 				state = SELECT_BOARD;
 				break;
 			case 2:
-				state = MAIL;
+				state = MAILBOX;
 				break;
 			case 3:
 				state = GAME;
@@ -104,8 +104,47 @@ void BoardManager::exe() {
 			state = MENU_PERSONAL;
 			break;
 		}
+		case MAILBOX: {
+			current_mail = -1;
+			load_mail();
+			int op = viewer.mailbox(users[current_user]->mail_list);
+			switch (op) {
+			case -1:
+				state = MENU_PERSONAL;
+				break;
+			case -2:
+				state = MENU;
+				break;
+			case -3: {
+			//string receiver;
+			//string title;
+			//int boxop1 = viewer.window_txtbox("Receiver", "Please input receiver", receiver, 28, 200, 90);
+			//if (boxop1 == 1) {
+			//	int boxop2 = viewer.window_txtbox("Title", "Please input the title", title, 28, 200, 90);
+			//	if (boxop2 == 1) {
+			//		
+
+			//	}
+			//}
+				state = SEND;
+				break;
+		}break;
+			default:
+				current_mail = op;
+				state = MAIL;
+				break;
+			}
+		}break;
 		case MAIL: {
-			viewer.mailbox();
+			int op = viewer.viewMail(users[current_user]->mail_list, current_mail);
+			if (op == -1) {
+				state = MAILBOX;
+			}
+		}break;
+		case SEND: {
+			viewer.sendMail(current_user);
+			state = MAILBOX;
+			break;
 		}
 		case SELECT_BOARD: {
 			current_board = -1;
@@ -193,7 +232,7 @@ void BoardManager::exe() {
 				int boxop = viewer.window_txtbox("New post", "Please input the title", title, 28, 200, 90);
 				if (boxop == 1) {
 					users[current_user]->add_post(current_board, title);
-					
+
 					load_user();
 					load_board();
 					boards[current_board].load_all_post();
@@ -231,7 +270,7 @@ void BoardManager::exe() {
 				if (boxop == 1) {
 					users[current_user]->edit_post_title(current_post, title);
 					users[current_user]->edit_post_content(current_post);
-					
+
 					load_user();
 					load_board();
 					boards[current_board].load_all_post();
