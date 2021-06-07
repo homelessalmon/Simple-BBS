@@ -528,7 +528,7 @@ int Viewer::mailbox(vector<Mail>mails)
     Button next("Next>>", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
     next.setFont(font);
     next.setPos({ 550, 730 });
-    Button send("Delete", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    Button send("Send", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
     send.setFont(font);
     send.setPos({ 550, 40 });
 
@@ -807,18 +807,21 @@ int Viewer::viewMail(vector<Mail>mails, int mailID)
     }
 }
 
-void Viewer::sendMail(string receiver_user_name, int myID, string title)
+void Viewer::sendMail(int myID)
 {
     bool send = false;
     do {
-        string input;
-        int i = window_txtbox("SEND MAIL", "Receiver's username:", input, 20, 200, 90);
+        string username, title;
+        int i = window_txtbox("SEND MAIL", "Receiver's username:", username, 20, 200, 90);
         if (i == -1) return;
-        send = send_mail(receiver_user_name, myID, title);
+        i = window_txtbox("SEND MAIL", "Title:", title, 20, 200, 90);
+        if (i == -1) return;
+        send = send_mail(username, myID, title);
         if (!send) {
             senderr();
         }
     } while (send);
+    return;
 }
 
 void Viewer::senderr()
