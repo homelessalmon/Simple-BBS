@@ -1,5 +1,4 @@
 #include "BoardManager.h"
-#include <windows.h>
 
 void BoardManager::exe() {
 	load_user();
@@ -77,8 +76,34 @@ void BoardManager::exe() {
 			case 2:
 				state = MAIL;
 				break;
+			case 3:
+				state = GAME;
+				break;
+			case 99:
+				state = ADMIN_SIGNUP;
+				break;
 			}
 		}break;
+		case ADMIN_SIGNUP: {
+			string account, password;
+			switch (viewer.signup(account, password, return_name_and_password())) {
+			case 1: {
+				Adiministrator member(account, password);
+				load_user();
+				state = MENU_PERSONAL;
+			}break;
+			case -1:
+				//MessageBox(NULL, L"Duplicated ID", NULL, MB_ICONHAND | MB_OK);
+				state = MENU_PERSONAL;
+				break;
+			}
+		}break;
+		case GAME: {
+			Game1 game;
+			viewer.game(game, current_user);
+			state = MENU_PERSONAL;
+			break;
+		}
 		case MAIL: {
 			viewer.mailbox();
 		}
@@ -168,9 +193,10 @@ void BoardManager::exe() {
 				int boxop = viewer.window_txtbox("New post", "Please input the title", title, 28, 200, 90);
 				if (boxop == 1) {
 					users[current_user]->add_post(current_board, title);
-					boards[current_board].load_all_post();
+					
 					load_user();
 					load_board();
+					boards[current_board].load_all_post();
 				}
 			}break;
 			default:
@@ -205,9 +231,10 @@ void BoardManager::exe() {
 				if (boxop == 1) {
 					users[current_user]->edit_post_title(current_post, title);
 					users[current_user]->edit_post_content(current_post);
-					boards[current_board].load_all_post();
+					
 					load_user();
 					load_board();
+					boards[current_board].load_all_post();
 				}
 			}break;
 			case -5: {
