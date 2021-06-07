@@ -395,6 +395,7 @@ void BoardManager::load_board() {
 }
 
 void BoardManager::load_mail() {
+	users[current_user]->mail_list.clear();
 	int mail_count = 0;
 	ifstream fin("mails/count.txt");
 	if (fin.is_open()) {
