@@ -129,7 +129,7 @@ void Adiministrator::remove_post(int post_id, string reason)
 	if (fout.is_open())
 	{
 		fout << "Sorry this post has been removed." << endl;
-		fout << "Due to " << reason;
+		fout << "Reason: " << reason;
 	}
 	fout.close();
 	fout.open("posts/" + to_string(post_id) + "comment.txt", ios::trunc);
@@ -244,7 +244,7 @@ void Member::remove_post(int post_id, string reason)
 	if (fout.is_open())
 	{
 		fout << "Sorry this post has been removed." << endl;
-		fout << "Due to " << reason;
+		fout << "Reason:  " << reason;
 	}
 	fout.close();
 	fout.open("posts/" + to_string(post_id) + "comment.txt", ios::trunc);
