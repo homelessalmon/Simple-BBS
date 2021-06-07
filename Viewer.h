@@ -34,8 +34,7 @@ public:
 	int window_txtbox(string title, string info, string& input, int limit, float posX, float posY); //to input one non-empty string
 	//-1.cancel; 1.enter successfully
 	//posX & posY is for adjusting title's position, posY = 90 is recommended, posX: 0 ~ 700
-	void game(Game1& game);
-	void game_lead(Game1& game);
+	void game(Game1& game, int userID); //just simply return
 };
 
 
@@ -274,6 +273,7 @@ public:
 
 	void pre_enter(string str) {
 		textbox.setString(str);
+		text.str("");
 		text << str;
 	}
 
