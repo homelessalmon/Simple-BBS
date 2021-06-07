@@ -481,7 +481,215 @@ int Viewer::menu2(int permission_lv)
     }
 }
 
-void Viewer::mailbox()
+int Viewer::mailbox(vector<Mail>mails)
+{
+    sf::RenderWindow window(sf::VideoMode(700, 800), "Boards", sf::Style::Default ^ sf::Style::Resize);
+    sf::Font font;
+    font.loadFromFile("consola.ttf");
+
+    sf::Text title;
+    title.setFont(font);
+    title.setFillColor(sf::Color::Red);
+    title.setCharacterSize(50);
+    title.setString("Boards");
+    title.setPosition({ 40, 30 });
+
+    //boards
+    int current = 0;
+
+    int mail_amount = mails.size();
+
+    vector<Button>mail_btn;
+    for (int i = 0; i < 8; i++) {
+        if (i < mail_amount) {
+            Button btn(mails[i].title, { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
+            mail_btn.push_back(btn);
+            mail_btn[i].setFont(font);
+            mail_btn[i].setPos({ 20, (float)(130 + (70 * i)) });
+        }
+        else if (i >= mail_amount) {
+            Button btn("", { 660, 50 }, 30, sf::Color::Black, sf::Color::White);
+            mail_btn.push_back(btn);
+            mail_btn[i].setFont(font);
+            mail_btn[i].setPos({ 20, (float)(130 + (70 * i)) });
+            mail_btn[i].btnOff();
+        }
+    }
+    //functional buttons
+    Button back("Back", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    back.setFont(font);
+    back.setPos({ 50, 730 });
+    Button logout("Logout", { 100, 40 }, 24, sf::Color::White, sf::Color::Black);
+    logout.setFont(font);
+    logout.setPos({ 180, 730 });
+    Button prev("<<Prev", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    prev.setFont(font);
+    prev.setPos({ 420, 730 });
+    Button next("Next>>", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    next.setFont(font);
+    next.setPos({ 550, 730 });
+    Button send("Delete", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    send.setFont(font);
+    send.setPos({ 550, 40 });
+
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+            case sf::Event::Closed:
+                window.close();
+                return -1;
+                break;
+            case sf::Event::MouseMoved:
+                if (mail_btn[0].isOn() && mail_btn[0].isMouseOver(window)) {
+                    mail_btn[0].setBgColor(sf::Color::White);
+                    mail_btn[0].setTxtColor(sf::Color::Black);
+                }
+                else if (mail_btn[1].isOn() && mail_btn[1].isMouseOver(window)) {
+                    mail_btn[1].setBgColor(sf::Color::White);
+                    mail_btn[1].setTxtColor(sf::Color::Black);
+                }
+                else if (mail_btn[2].isOn() && mail_btn[2].isMouseOver(window)) {
+                    mail_btn[2].setBgColor(sf::Color::White);
+                    mail_btn[2].setTxtColor(sf::Color::Black);
+                }
+                else if (mail_btn[3].isOn() && mail_btn[3].isMouseOver(window)) {
+                    mail_btn[3].setBgColor(sf::Color::White);
+                    mail_btn[3].setTxtColor(sf::Color::Black);
+                }
+                else if (mail_btn[4].isOn() && mail_btn[4].isMouseOver(window)) {
+                    mail_btn[4].setBgColor(sf::Color::White);
+                    mail_btn[4].setTxtColor(sf::Color::Black);
+                }
+                else if (mail_btn[5].isOn() && mail_btn[5].isMouseOver(window)) {
+                    mail_btn[5].setBgColor(sf::Color::White);
+                    mail_btn[5].setTxtColor(sf::Color::Black);
+                }
+                else if (mail_btn[6].isOn() && mail_btn[6].isMouseOver(window)) {
+                    mail_btn[6].setBgColor(sf::Color::White);
+                    mail_btn[6].setTxtColor(sf::Color::Black);
+                }
+                else if (mail_btn[7].isOn() && mail_btn[7].isMouseOver(window)) {
+                    mail_btn[7].setBgColor(sf::Color::White);
+                    mail_btn[7].setTxtColor(sf::Color::Black);
+                }
+                else if (back.isMouseOver(window)) {
+                    back.setBgColor(sf::Color::Red);
+                    back.setTxtColor(sf::Color::White);
+                }
+                else if (logout.isMouseOver(window)) {
+                    logout.setBgColor(sf::Color::Blue);
+                    logout.setTxtColor(sf::Color::White);
+                }
+                else if (prev.isMouseOver(window)) {
+                    prev.setBgColor(sf::Color::Yellow);
+                }
+                else if (next.isMouseOver(window)) {
+                    next.setBgColor(sf::Color::Yellow);
+                }
+                else if (send.isMouseOver(window)) {
+                    send.setBgColor(sf::Color::Green);
+                }
+                else {
+                    for (int i = 0; i < 8; i++) {
+                        mail_btn[i].setBgColor(sf::Color::Black);
+                        mail_btn[i].setTxtColor(sf::Color::White);
+                    }
+                    back.setBgColor(sf::Color::White);
+                    back.setTxtColor(sf::Color::Black);
+                    logout.setBgColor(sf::Color::White);
+                    logout.setTxtColor(sf::Color::Black);
+                    prev.setBgColor(sf::Color::White);
+                    next.setBgColor(sf::Color::White);
+                    send.setBgColor(sf::Color::White);
+                }
+                break;
+            case sf::Event::MouseButtonPressed:
+                if (mail_btn[0].isOn() && mail_btn[0].isMouseOver(window)) {
+                    return current;
+                }
+                if (mail_btn[1].isOn() && mail_btn[1].isMouseOver(window)) {
+                    return current + 1;
+                }
+                if (mail_btn[2].isOn() && mail_btn[2].isMouseOver(window)) {
+                    return current + 2;
+                }
+                if (mail_btn[3].isOn() && mail_btn[3].isMouseOver(window)) {
+                    return current + 3;
+                }
+                if (mail_btn[4].isOn() && mail_btn[4].isMouseOver(window)) {
+                    return current + 4;
+                }
+                if (mail_btn[5].isOn() && mail_btn[5].isMouseOver(window)) {
+                    return current + 5;
+                }
+                if (mail_btn[6].isOn() && mail_btn[6].isMouseOver(window)) {
+                    return current + 6;
+                }
+                if (mail_btn[7].isOn() && mail_btn[7].isMouseOver(window)) {
+                    return current + 7;
+                }
+                if (back.isMouseOver(window)) {
+                    return -1;
+                }
+                if (logout.isMouseOver(window)) {
+                    return -2;
+                }
+                if (prev.isMouseOver(window)) {
+                    //cout << "Prev" << endl;
+                    if (current > 0) {
+                        current -= 8;
+                        for (int i = 0; i < 8; i++) {
+                            if (i + current < mail_amount) {
+                                mail_btn[i].btnOn();
+                                mail_btn[i].setText(mails[current + i].title);
+                            }
+                            else if (i + current >= mail_amount) {
+                                mail_btn[i].btnOff();
+                                mail_btn[i].setText("");
+                            }
+                        }
+                    }
+                }
+                if (next.isMouseOver(window)) {
+                    //cout << "Next " << endl;
+                    if (current + 8 < mail_amount) {
+                        current += 8;
+                        for (int i = 0; i < 8; i++) {
+                            if (i + current < mail_amount) {
+                                mail_btn[i].btnOn();
+                                mail_btn[i].setText(mails[current + i].title);
+                            }
+                            else if (i + current >= mail_amount) {
+                                mail_btn[i].btnOff();
+                                mail_btn[i].setText("");
+                            }
+                        }
+                    }
+                }
+                if (send.isMouseOver(window)) {
+                    return -3;
+                }
+                break;
+            }
+        }
+
+        window.clear();
+        for (int i = 0; i < 8; i++) {
+            mail_btn[i].drawTo(window);
+        }
+        back.drawTo(window);
+        logout.drawTo(window);
+        prev.drawTo(window);
+        next.drawTo(window);
+        send.drawTo(window);
+        window.draw(title);
+        window.display();
+    }
+}
+
+void Viewer::viewMail()
 {
 
 }
@@ -1484,14 +1692,22 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
     vector<sf::Text>comments;
     for (int i = 0; i < 8; i++) {
         if (i < comment_amount) {
-            string t = posts[postID].comments[i].name + ":" + posts[postID].comments[i].com;
-            sf::Text comment(t, font, 30);
+            string t;
+            if (posts[postID].comments[i].is_removed) {
+                t = "<deleted> Reason:" + posts[postID].comments[i].com;
+                del_btn[i].btnOff();
+            }
+            else {
+                del_btn[i].btnOn();
+                t = posts[postID].comments[i].name + ":" + posts[postID].comments[i].com;
+            }
+            sf::Text comment(t, font, 25);
             comments.push_back(comment);
             comments[i].setFillColor(sf::Color::White);
             comments[i].setPosition({ 50, (float)(200 + (60 * i)) });
         }
         else if (i >= comment_amount) {
-            sf::Text comment("", font, 30);
+            sf::Text comment("", font, 25);
             comments.push_back(comment);
             comments[i].setFillColor(sf::Color::White);
             comments[i].setPosition({ 50, (float)(200 + (60 * i)) });
@@ -1603,8 +1819,19 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
                         current -= 8;
                         for (int i = 0; i < 8; i++) {
                             if (i + current < comment_amount) {
-                                comments[i].setString(posts[postID].comments[i + current].name + ":" + posts[postID].comments[i + current].com);
-                                del_btn[i].btnOn();
+                                if (i < comment_amount) {
+                                    string t;
+                                    if (posts[postID].comments[i + current].is_removed) {
+                                        t = "<deleted> Reason:" + posts[postID].comments[i + current].com;
+                                        comments[i].setString(t);
+                                        del_btn[i].btnOff();
+                                    }
+                                    else {
+                                        del_btn[i].btnOn();
+                                        t = posts[postID].comments[i + current].name + ":" + posts[postID].comments[i + current].com;
+                                        comments[i].setString(t);
+                                    }
+                                }
                             }
                             else if (i + current >= comment_amount) {
                                 comments[i].setString("");
@@ -1619,8 +1846,17 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
                         current += 8;
                         for (int i = 0; i < 8; i++) {
                             if (i + current < comment_amount) {
-                                comments[i].setString(posts[postID].comments[i + current].name + ":" + posts[postID].comments[i + current].com);
-                                del_btn[i].btnOn();
+                                string t;
+                                if (posts[postID].comments[i + current].is_removed) {
+                                    t = "<deleted> Reason:" + posts[postID].comments[i + current].com;
+                                    comments[i].setString(t);
+                                    del_btn[i].btnOff();
+                                }
+                                else {
+                                    del_btn[i].btnOn();
+                                    t = posts[postID].comments[i + current].name + ":" + posts[postID].comments[i + current].com;
+                                    comments[i].setString(t);
+                                }
                             }
                             else if (i + current >= comment_amount) {
                                 comments[i].setString("");
