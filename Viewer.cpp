@@ -395,12 +395,15 @@ int Viewer::menu2(int permission_lv)
     Button mailbox("Mailbox", { 400, 70 }, 50, sf::Color::Black, sf::Color::White);
     mailbox.setFont(font);
     mailbox.setPos({ 150, 320 });
+    Button game("Game", { 400, 70 }, 50, sf::Color::Black, sf::Color::White);
+    game.setFont(font);
+    game.setPos({ 150, 420 });
     Button logout("Log out", { 400, 70 }, 50, sf::Color::Black, sf::Color::White);
     logout.setFont(font);
-    logout.setPos({ 150, 420 });
+    logout.setPos({ 150, 520 });
     Button addAdmin("ADD ADMIN", { 400, 70 }, 50, sf::Color::Black, sf::Color::White);
     addAdmin.setFont(font);
-    addAdmin.setPos({ 150, 520 });
+    addAdmin.setPos({ 150, 620 });
     if (permission_lv != 2)
         addAdmin.btnOff();
 
@@ -421,6 +424,10 @@ int Viewer::menu2(int permission_lv)
                     mailbox.setBgColor(sf::Color::White);
                     mailbox.setTxtColor(sf::Color::Black);
                 }
+                else if (game.isMouseOver(window)) {
+                    game.setBgColor(sf::Color::White);
+                    game.setTxtColor(sf::Color::Black);
+                }
                 else if (logout.isMouseOver(window)) {
                     logout.setBgColor(sf::Color::White);
                     logout.setTxtColor(sf::Color::Black);
@@ -434,6 +441,8 @@ int Viewer::menu2(int permission_lv)
                     board.setTxtColor(sf::Color::White);
                     mailbox.setBgColor(sf::Color::Black);
                     mailbox.setTxtColor(sf::Color::White);
+                    game.setBgColor(sf::Color::Black);
+                    game.setTxtColor(sf::Color::White);
                     logout.setBgColor(sf::Color::Black);
                     logout.setTxtColor(sf::Color::White);
                     addAdmin.setBgColor(sf::Color::Black);
@@ -450,6 +459,9 @@ int Viewer::menu2(int permission_lv)
                 if (mailbox.isMouseOver(window)) {
                     return 2;
                 }
+                if (game.isMouseOver(window)) {
+                    return 3;
+                }
                 if (addAdmin.isOn() && addAdmin.isMouseOver(window)) {
                     return 99;
                 }
@@ -460,6 +472,7 @@ int Viewer::menu2(int permission_lv)
         window.clear();
         board.drawTo(window);
         mailbox.drawTo(window);
+        game.drawTo(window);
         logout.drawTo(window);
         if (addAdmin.isOn()) 
             addAdmin.drawTo(window);
