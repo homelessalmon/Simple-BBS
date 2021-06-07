@@ -56,6 +56,7 @@ int Viewer::menu1()
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                return 0;
                 break;
             case sf::Event::MouseMoved:
                 if (login.isMouseOver(window)) {
@@ -162,6 +163,7 @@ int Viewer::login(string& username, string& password, vector<pair<string, string
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                return -1;
                 break;
             case sf::Event::TextEntered:
                 if (txtbox_username.isSel()) {
@@ -270,7 +272,7 @@ int Viewer::signup(string& username, string& password, vector<pair<string, strin
     Textbox txtbox_username(30, sf::Color::Black, false);
     txtbox_username.setFont(font);
     txtbox_username.setPos({ 100, 300 });
-    txtbox_username.setLimit(true, 10);
+    txtbox_username.setLimit(true, 20);
     Textbox txtbox_password(30, sf::Color::Black, false);
     txtbox_password.setFont(font);
     txtbox_password.setPos({ 100, 430 });
@@ -289,6 +291,7 @@ int Viewer::signup(string& username, string& password, vector<pair<string, strin
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                return -1;
                 break;
             case sf::Event::TextEntered:
                 if (txtbox_username.isSel()) {
@@ -538,6 +541,7 @@ int Viewer::board_select(vector<Board> boards, int permission_lv)
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                return -1;
                 break;
             case sf::Event::MouseMoved:
                 if (board_btn[0].isOn() && board_btn[0].isMouseOver(window)) {
@@ -610,72 +614,6 @@ int Viewer::board_select(vector<Board> boards, int permission_lv)
                 }
                 break;
             case sf::Event::MouseButtonPressed:
-#if DEBUG
-                if (board_btn[0].isOn() && board_btn[0].isMouseOver(window)) {
-                    cout << "Board " << current << endl;
-                }
-                if (board_btn[1].isOn() && board_btn[1].isMouseOver(window)) {
-                    cout << "Board " << current + 1 << endl;
-                }
-                if (board_btn[2].isOn() && board_btn[2].isMouseOver(window)) {
-                    cout << "Board " << current + 2 << endl;
-                }
-                if (board_btn[3].isOn() && board_btn[3].isMouseOver(window)) {
-                    cout << "Board " << current + 3 << endl;
-                }
-                if (board_btn[4].isOn() && board_btn[4].isMouseOver(window)) {
-                    cout << "Board " << current + 4 << endl;
-                }
-                if (board_btn[5].isOn() && board_btn[5].isMouseOver(window)) {
-                    cout << "Board " << current + 5 << endl;
-                }
-                if (board_btn[6].isOn() && board_btn[6].isMouseOver(window)) {
-                    cout << "Board " << current + 6 << endl;
-                }
-                if (board_btn[7].isOn() && board_btn[7].isMouseOver(window)) {
-                    cout << "Board " << current + 7 << endl;
-                }
-                if (back.isMouseOver(window)) {
-                    cout << "back" << endl;
-                }
-                if (logout.isMouseOver(window)) {
-                    cout << "Logout" << endl;
-                }
-                if (prev.isMouseOver(window)) {
-                    cout << "Prev" << endl;
-                    if (current > 0) current -= 8;
-                    for (int i = 0; i < 8; i++) {
-                        if (i + current < board_amount) {
-                            board_btn[i].btnOn();
-                            board_btn[i].setText(boards[i + current].board_name);
-                        }
-                        else if (i + current >= board_amount) {
-                            board_btn[i].btnOff();
-                            board_btn[i].setText("");
-                        }
-                    }
-                }
-                if (next.isMouseOver(window)) {
-                    cout << "Next " << endl;
-                    if (current + 8 < board_amount) current += 8;
-                    for (int i = 0; i < 8; i++) {
-                        if (i + current < board_amount) {
-                            board_btn[i].btnOn();
-                            board_btn[i].setText(boards[i + current].board_name);
-                        }
-                        else if (i + current >= board_amount) {
-                            board_btn[i].btnOff();
-                            board_btn[i].setText("");
-                        }
-                    }
-                }
-                if (add_board.isOn() && add_board.isMouseOver(window)) {
-                    cout << "add board" << endl;
-                }
-                if (del_board.isOn() && del_board.isMouseOver(window)) {
-                    cout << "delete board" << endl;
-                }
-#else
                 if (board_btn[0].isOn() && board_btn[0].isMouseOver(window)) {
                     return validVal[current];
                 }
@@ -744,7 +682,6 @@ int Viewer::board_select(vector<Board> boards, int permission_lv)
                 if (del_board.isOn() && del_board.isMouseOver(window)) {
                     return -4;
                 }
-#endif
                 break;
             }
         }
@@ -803,13 +740,14 @@ int Viewer::board_add(vector<Board> boards, string& name)
     Button cancel("Cancel", { 130, 65 }, 30, sf::Color::White, sf::Color::Black);
     cancel.setFont(font);
     cancel.setPos({ 400, 450 });
-
+    
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                return -1;
                 break;
             case sf::Event::TextEntered:
                 if (txtbox_boardname.isSel()) {
@@ -934,6 +872,7 @@ int Viewer::board_delete(vector<Board> boards)
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                return -1;
                 break;
             case sf::Event::MouseMoved:
                 if (board_btn[0].isOn() && board_btn[0].isMouseOver(window)) {
@@ -1125,6 +1064,7 @@ int Viewer::post_select(Board cur_board, int permission_lv)
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                return -1;
                 break;
             case sf::Event::MouseMoved:
                 if (post_btn[0].isOn() && post_btn[0].isMouseOver(window)) {
@@ -1309,7 +1249,7 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
     vector<sf::Text>lines;
     for (int i = 0; i < 12; i++) {
         if (i < line_amount) {
-            sf::Text line(posts[postID].content[i], font, 30);
+            sf::Text line(posts[postID].content[i], font, 20);
             lines.push_back(line);
             lines[i].setFillColor(sf::Color::White);
             lines[i].setPosition({ 70, (float)(200 + (40 * i)) });
@@ -1358,6 +1298,7 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                return -1;
                 break;
             case sf::Event::MouseMoved:
                 if (back.isMouseOver(window)) {
@@ -1411,7 +1352,7 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
                     return -3;
                 }
                 if (pgup.isMouseOver(window)) {
-                    cout << "Pgup" << endl;
+                    //cout << "Pgup" << endl;
                     if (current > 0) {
                         current -= 12;
                         for (int i = 0; i < 12; i++) {
@@ -1425,7 +1366,7 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
                     }
                 }
                 if (pgdn.isMouseOver(window)) {
-                    cout << "Pgdn " << endl;
+                    //cout << "Pgdn " << endl;
                     if (current + 12 < line_amount) {
                         current += 12;
                         for (int i = 0; i < 12; i++) {
@@ -1538,6 +1479,7 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                return -1;
                 break;
             case sf::Event::MouseMoved:
                 if (del_btn[0].isOn() && del_btn[0].isMouseOver(window)) {
@@ -1630,7 +1572,7 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
                     return -100;
                 }
                 if (pgup.isMouseOver(window)) {
-                    cout << "Pgup" << endl;
+                    //cout << "Pgup" << endl;
                     if (current > 0) {
                         current -= 8;
                         for (int i = 0; i < 8; i++) {
@@ -1646,7 +1588,7 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
                     }
                 }
                 if (pgdn.isMouseOver(window)) {
-                    cout << "Pgdn " << endl;
+                    //cout << "Pgdn " << endl;
                     if (current + 8 < comment_amount) {
                         current += 8;
                         for (int i = 0; i < 8; i++) {
@@ -1687,6 +1629,103 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
     }
 }
 
+int Viewer::edit_title(string& cur_title)
+{
+    sf::RenderWindow window(sf::VideoMode(700, 600), "add board", sf::Style::Default ^ sf::Style::Resize);
+    sf::Font font;
+    font.loadFromFile("consola.ttf");
+
+    sf::Text txt_title("Edit Title", font, 70);
+    sf::Text txt_info("Edit here: ", font, 30);
+    sf::Text errormsg("Enter something...", font, 20);
+    txt_title.setFillColor(sf::Color::Red);
+    txt_title.setPosition({ 160, 90 });
+    txt_info.setFillColor(sf::Color::White);
+    txt_info.setPosition({ 100, 245 });
+    errormsg.setFillColor(sf::Color::Black);
+    errormsg.setPosition({ 250, 350 });
+
+    Textbox txtbox_input(30, sf::Color::Black, false);
+    txtbox_input.setFont(font);
+    txtbox_input.setPos({ 100, 295 });
+    txtbox_input.setLimit(true, 27);
+    txtbox_input.pre_enter(cur_title);
+
+    Button enter("Enter", { 130, 65 }, 30, sf::Color::White, sf::Color::Black);
+    enter.setFont(font);
+    enter.setPos({ 150, 430 });
+    Button cancel("Cancel", { 130, 65 }, 30, sf::Color::White, sf::Color::Black);
+    cancel.setFont(font);
+    cancel.setPos({ 400, 430 });
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+            case sf::Event::Closed:
+                window.close();
+                return -1;
+                break;
+            case sf::Event::TextEntered:
+                if (txtbox_input.isSel()) {
+                    txtbox_input.typedOn(event);
+                }
+                break;
+            case sf::Event::MouseMoved:
+                if (enter.isMouseOver(window)) {
+                    enter.setTxtColor(sf::Color::White);
+                    enter.setBgColor(sf::Color(0, 204, 0));
+                }
+                else if (cancel.isMouseOver(window)) {
+                    cancel.setTxtColor(sf::Color::White);
+                    cancel.setBgColor(sf::Color::Red);
+                }
+                else {
+                    enter.setTxtColor(sf::Color::Black);
+                    enter.setBgColor(sf::Color::White);
+                    cancel.setTxtColor(sf::Color::Black);
+                    cancel.setBgColor(sf::Color::White);
+                }
+                break;
+            case sf::Event::MouseButtonPressed:
+                if (txtbox_input.isMouseOver(window)) {
+                    txtbox_input.setSelected(true);
+                }
+                else if (enter.isMouseOver(window)) {
+                    txtbox_input.setSelected(false);
+                    cur_title = txtbox_input.getText();
+                    if (cur_title != "") {
+                        errormsg.setFillColor(sf::Color::Black);
+                        //cout << input << endl;
+                        return 1;
+                    }
+                    else {
+                        errormsg.setFillColor(sf::Color::Red);
+                    }
+                }
+                else if (cancel.isMouseOver(window)) {
+                    //cout << "cancel" << endl;
+                    txtbox_input.setSelected(false);
+                    return -1;
+                }
+                else {
+                    txtbox_input.setSelected(false);
+                }
+                break;
+            }
+        }
+
+        window.clear();
+        window.draw(txt_title);
+        window.draw(txt_info);
+        window.draw(errormsg);
+        txtbox_input.drawTo(window);
+        enter.drawTo(window);
+        cancel.drawTo(window);
+        window.display();
+    }
+}
+
 int Viewer::window_txtbox(string title, string info, string& input, int limit, float posX, float posY)
 {
     sf::RenderWindow window(sf::VideoMode(700, 600), "add board", sf::Style::Default ^ sf::Style::Resize);
@@ -1722,6 +1761,7 @@ int Viewer::window_txtbox(string title, string info, string& input, int limit, f
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                return -1;
                 break;
             case sf::Event::TextEntered:
                 if (txtbox_input.isSel()) {
@@ -1781,4 +1821,14 @@ int Viewer::window_txtbox(string title, string info, string& input, int limit, f
         cancel.drawTo(window);
         window.display();
     }
+}
+
+void Viewer::game(Game1& game)
+{
+
+}
+
+void Viewer::game_lead(Game1& game)
+{
+
 }
