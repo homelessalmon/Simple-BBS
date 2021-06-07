@@ -214,8 +214,6 @@ void BoardManager::exe() {
 				}
 				if (boxop == 1) {
 					users[current_user]->remove_post(current_post, reason);
-					load_user();
-					load_board();
 					boards[current_board].load_all_post();
 				}
 			}break;
@@ -239,13 +237,24 @@ void BoardManager::exe() {
 				string reason;
 				int boxop = viewer.window_txtbox("Post Comment", "Please input the comment", reason, 28, 100, 90);
 				if (boxop == 1) {
-					users[current_user]->add_comment(current_post, current_user, "reason");
+					users[current_user]->add_comment(current_post, current_user, reason);
 					boards[current_board].load_all_post();
 				}
 			}break;
-			default:
-				//users[current_user]->remove_comment(current_post, current_user, "reason");
-				break;
+			default:{
+				string reason;
+				int boxop = 1;
+				if (current_user == return_post_author_id(current_post)) {
+					reason = "Delete by Poster";
+				}
+				else {
+					boxop = viewer.window_txtbox("Delete Comment", "Please input the reason", reason, 28, 100, 90);
+				}
+				if (boxop == 1) {
+					users[current_user]->remove_post(current_post, reason);
+					boards[current_board].load_all_post();
+				}
+			}break;
 			}
 		}
 
