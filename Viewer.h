@@ -10,7 +10,6 @@
 #define DEL_KEY 8
 #define ENTER_KEY 13
 #define ESC_KEY 27
-#define DEBUG 0
 
 using namespace std;
 
@@ -23,7 +22,6 @@ public:
 	int menu2(int permission_lv); //0.Logout; 1.View Boards; 2.Mailbox; 99.add admin
 	int login(string&, string&, vector<pair<string, string>>); //1.success; -1.back
 	int signup(string&, string&, vector<pair<string, string>>); //1.success; -1.back
-	void game(Game1& game);
 	void mailbox(); //todo
 	void sendMail(); //todo
 	int board_select(vector<Board>, int permission_lv); //-1.back; -2.logout; -3.add board(admin); -4.del board(admin); 0~n.board ID
@@ -32,9 +30,12 @@ public:
 	int post_select(Board, int permission_lv); //-1.back; -2.logout; -3.add; 0~n.post ID
 	int view_post(vector<Post> posts, string author, int authorID, int postID, int boardID, int userID, int permission_lv); //-1.back; -2.logout; -3.view comment; -4.edit; -5.del_post;
 	int view_comment(vector<Post> posts, int postID, int userID, int permission_lv); //-1.back; -100.leave comment; 0~n.comment to be deleted
+	int edit_title(string& cur_title); //-1.cancel; 1.enter successfully
 	int window_txtbox(string title, string info, string& input, int limit, float posX, float posY); //to input one non-empty string
 	//-1.cancel; 1.enter successfully
 	//posX & posY is for adjusting title's position, posY = 90 is recommended, posX: 0 ~ 700
+	void game(Game1& game);
+	void game_lead(Game1& game);
 };
 
 
@@ -269,6 +270,11 @@ public:
 	void drawTo(sf::RenderWindow& window) {
 		window.draw(bg);
 		window.draw(textbox);
+	}
+
+	void pre_enter(string str) {
+		textbox.setString(str);
+		text << str;
 	}
 
 private:
