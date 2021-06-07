@@ -820,7 +820,7 @@ void Viewer::sendMail(int myID)
         if (!send) {
             senderr();
         }
-    } while (send);
+    } while (!send);
     return;
 }
 
