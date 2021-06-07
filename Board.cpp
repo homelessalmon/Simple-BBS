@@ -31,6 +31,7 @@ vector<Comment> load_comment(int post_id)
 		Comment tmp(name, com);
 		if (name == REMOVE)
 		{
+			name = "<deleted> Reason:";
 			tmp.is_removed = true;
 		}
 		list.push_back(tmp);
