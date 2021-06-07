@@ -199,10 +199,17 @@ void BoardManager::exe() {
 			case -3:
 				state = COMMENT;
 				break;
-			case -4:
-				users[current_user]->edit_post_content(current_post);
-				boards[current_board].load_all_post();
-				break;
+			case -4: {
+				string title;
+				int boxop = viewer.window_txtbox("edit post", "Please input the new title", title, 28, 200, 90);
+				if (boxop == 1) {
+					users[current_user]->edit_post_title(current_post, title);
+					users[current_user]->edit_post_content(current_post);
+					boards[current_board].load_all_post();
+					load_user();
+					load_board();
+				}
+			}break;
 			case -5: {
 				string reason;
 				int boxop = 1;
@@ -234,14 +241,14 @@ void BoardManager::exe() {
 				state = POST;
 				break;
 			case -100: {
-				string reason;
-				int boxop = viewer.window_txtbox("Post Comment", "Please input the comment", reason, 28, 100, 90);
+				string comment;
+				int boxop = viewer.window_txtbox("Post Comment", "Please input the comment", comment, 28, 100, 90);
 				if (boxop == 1) {
-					users[current_user]->add_comment(current_post, current_user, reason);
+					users[current_user]->add_comment(current_post, current_user, comment);
 					boards[current_board].load_all_post();
 				}
 			}break;
-			default:{
+			default: {
 				string reason;
 				int boxop = 1;
 				if (current_user == return_post_author_id(current_post)) {
@@ -251,7 +258,7 @@ void BoardManager::exe() {
 					boxop = viewer.window_txtbox("Delete Comment", "Please input the reason", reason, 28, 100, 90);
 				}
 				if (boxop == 1) {
-					users[current_user]->remove_post(current_post, reason);
+					users[current_user]->remove_comment(current_post, op, reason);
 					boards[current_board].load_all_post();
 				}
 			}break;
