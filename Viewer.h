@@ -22,7 +22,8 @@ public:
 	int menu2(int permission_lv); //0.Logout; 1.View Boards; 2.Mailbox; 3.game; 99.add admin
 	int login(string&, string&, vector<pair<string, string>>); //1.success; -1.back
 	int signup(string&, string&, vector<pair<string, string>>); //1.success; -1.back
-	void mailbox(); //todo
+	int mailbox(vector<Mail>mails); //-1.back; -2.logout; -3.sendMail; 0~n.view mailID
+	void viewMail(); //
 	void sendMail(); //todo
 	int board_select(vector<Board>, int permission_lv); //-1.back; -2.logout; -3.add board(admin); -4.del board(admin); 0~n.board ID
 	int board_add(vector<Board>, string&); // -1.back(no add); 1.add successfully
