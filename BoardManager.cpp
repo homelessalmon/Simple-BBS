@@ -5,6 +5,7 @@ void BoardManager::exe() {
 	while (true) {
 		switch (state) {
 		case MENU: {
+			current_mail = -1;
 			current_user = -1;
 			current_board = -1;
 			current_post = -1;
