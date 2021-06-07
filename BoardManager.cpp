@@ -169,6 +169,8 @@ void BoardManager::exe() {
 				if (boxop == 1) {
 					users[current_user]->add_post(current_board, title);
 					boards[current_board].load_all_post();
+					load_user();
+					load_board();
 				}
 			}break;
 			default:
@@ -212,6 +214,8 @@ void BoardManager::exe() {
 				}
 				if (boxop == 1) {
 					users[current_user]->remove_post(current_post, "reason");
+					load_user();
+					load_board();
 					boards[current_board].load_all_post();
 				}
 			}break;
