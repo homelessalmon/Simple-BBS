@@ -11,7 +11,9 @@ enum BoardState {
 	SIGNUP,
 	MENU_PERSONAL,
 	ADMIN_SIGNUP,
+	MAILBOX,
 	MAIL,
+	SEND,
 	GAME,
 	SELECT_BOARD,
 	ADD_BOARD,
@@ -30,6 +32,7 @@ public:
 	int current_user = -1;
 	int current_board = -1;
 	int current_post = -1;
+	int current_mail = -1;
 
 	BoardState state;
 	Viewer viewer;
