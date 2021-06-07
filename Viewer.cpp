@@ -689,14 +689,180 @@ int Viewer::mailbox(vector<Mail>mails)
     }
 }
 
-void Viewer::viewMail()
+int Viewer::viewMail(vector<Mail>mails, int mailID)
 {
+    sf::RenderWindow window(sf::VideoMode(700, 800), mails[mailID].title, sf::Style::Default ^ sf::Style::Resize);
+    sf::Font font;
+    font.loadFromFile("consola.ttf");
 
+    sf::Text txt_author("From: " + mails[mailID].from, font, 30);
+    txt_author.setFillColor(sf::Color::Red);
+    txt_author.setPosition({ 30, 45 });
+    sf::Text title("Title: " + mails[mailID].title, font, 30);
+    title.setFillColor(sf::Color::White);
+    title.setPosition({ 30, 120 });
+
+    //boards
+    int current = 0;
+    int line_amount = mails[mailID].content.size();
+    vector<sf::Text>lines;
+    for (int i = 0; i < 12; i++) {
+        if (i < line_amount) {
+            sf::Text line(mails[mailID].content[i], font, 20);
+            lines.push_back(line);
+            lines[i].setFillColor(sf::Color::White);
+            lines[i].setPosition({ 70, (float)(200 + (40 * i)) });
+        }
+        else if (i >= line_amount) {
+            sf::Text line("", font, 30);
+            lines.push_back(line);
+            lines[i].setFillColor(sf::Color::White);
+            lines[i].setPosition({ 70, (float)(200 + (30 * i)) });
+        }
+    }
+    //functional buttons
+    Button back("Back", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    back.setFont(font);
+    back.setPos({ 50, 730 });
+    Button pgup("<<PgUp", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    pgup.setFont(font);
+    pgup.setPos({ 425, 730 });
+    Button pgdn("PgDn>>", { 100, 40 }, 22, sf::Color::White, sf::Color::Black);
+    pgdn.setFont(font);
+    pgdn.setPos({ 550, 730 });
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+            case sf::Event::Closed:
+                window.close();
+                return -1;
+                break;
+            case sf::Event::MouseMoved:
+                if (back.isMouseOver(window)) {
+                    back.setBgColor(sf::Color::Red);
+                    back.setTxtColor(sf::Color::White);
+                }
+                else if (pgup.isMouseOver(window)) {
+                    pgup.setBgColor(sf::Color::Yellow);
+                }
+                else if (pgdn.isMouseOver(window)) {
+                    pgdn.setBgColor(sf::Color::Yellow);
+                }
+                else {
+                    back.setBgColor(sf::Color::White);
+                    back.setTxtColor(sf::Color::Black);
+                    pgup.setBgColor(sf::Color::White);
+                    pgdn.setBgColor(sf::Color::White);
+                }
+                break;
+            case sf::Event::MouseButtonPressed:
+                if (back.isMouseOver(window)) {
+                    //cout << "back" << endl;
+                    return -1;
+                }
+                if (pgup.isMouseOver(window)) {
+                    //cout << "Pgup" << endl;
+                    if (current > 0) {
+                        current -= 12;
+                        for (int i = 0; i < 12; i++) {
+                            if (i + current < line_amount) {
+                                lines[i].setString(mails[mailID].content[i + current]);
+                            }
+                            else if (i + current >= line_amount) {
+                                lines[i].setString("");
+                            }
+                        }
+                    }
+                }
+                if (pgdn.isMouseOver(window)) {
+                    //cout << "Pgdn " << endl;
+                    if (current + 12 < line_amount) {
+                        current += 12;
+                        for (int i = 0; i < 12; i++) {
+                            if (i + current < line_amount) {
+                                lines[i].setString(mails[mailID].content[i + current]);
+                            }
+                            else if (i + current >= line_amount) {
+                                lines[i].setString("");
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+        window.clear();
+        for (int i = 0; i < 12; i++) {
+            window.draw(lines[i]);
+        }
+        window.draw(txt_author);
+        window.draw(title);
+        back.drawTo(window);
+        pgup.drawTo(window);
+        pgdn.drawTo(window);
+        window.display();
+    }
 }
 
-void Viewer::sendMail()
+void Viewer::sendMail(string receiver_user_name, int myID, string title)
 {
+    bool send = false;
+    do {
+        string input;
+        int i = window_txtbox("SEND MAIL", "Receiver's username:", input, 20, 200, 90);
+        if (i == -1) return;
+        send = send_mail(receiver_user_name, myID, title);
+        if (!send) {
+            senderr();
+        }
+    } while (send);
+}
 
+void Viewer::senderr()
+{
+    sf::RenderWindow window(sf::VideoMode(400, 200), "ERROR", sf::Style::Default ^ sf::Style::Resize);
+    sf::Font font;
+    font.loadFromFile("consola.ttf");
+
+    sf::Text msg("User not exist", font, 30);
+    msg.setFillColor(sf::Color::White);
+    msg.setPosition({ 90, 50 });
+
+    Button ok("OK", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
+    ok.setFont(font);
+    ok.setPos({ 150, 130 });
+        
+    sf::Event event;
+    while (window.isOpen()) {           
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+            if (event.type == sf::Event::MouseMoved) {
+                if (ok.isMouseOver(window)) {
+                    ok.setBgColor(sf::Color(128, 128, 128));
+                    ok.setTxtColor(sf::Color::White);
+                }
+                else {
+                    ok.setBgColor(sf::Color::White);
+                    ok.setTxtColor(sf::Color::Black);
+                }
+            }
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (ok.isMouseOver(window)) {
+                    return;
+                }
+            }
+        }
+            
+        window.clear();
+        ok.drawTo(window);
+        window.draw(msg);
+        window.display();
+    }
 }
 
 int Viewer::board_select(vector<Board> boards, int permission_lv)
