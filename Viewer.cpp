@@ -1,5 +1,13 @@
 #include "Viewer.h"
 
+bool isNumber(const string& str)
+{
+    for (char const& c : str) {
+        if (std::isdigit(c) == 0) return false;
+    }
+    return true;
+}
+
 bool Viewer::isValid(string username, string password, vector<pair<string, string>> userdata, int mode)
 {
     if (username == "" || password == "") return false;
@@ -201,10 +209,10 @@ int Viewer::login(string& username, string& password, vector<pair<string, string
                 else if (enter.isMouseOver(window)) {
                     username = txtbox_username.getText();
                     password = txtbox_password.getText();
-                    cout << username << " " << password << endl;
+                    std::cout << username << " " << password << endl;
                     if (isValid(username, password, userdata, 1)) {
                         errormsg.setFillColor(sf::Color::Black);
-                        cout << "success" << endl;
+                        std::cout << "success" << endl;
                         return 1;
                     }
                     else {
@@ -1631,7 +1639,7 @@ int Viewer::view_comment(vector<Post> posts, int postID, int userID, int permiss
 
 int Viewer::edit_title(string& cur_title)
 {
-    sf::RenderWindow window(sf::VideoMode(700, 600), "add board", sf::Style::Default ^ sf::Style::Resize);
+    sf::RenderWindow window(sf::VideoMode(700, 600), "edit title", sf::Style::Default ^ sf::Style::Resize);
     sf::Font font;
     font.loadFromFile("consola.ttf");
 
@@ -1728,7 +1736,7 @@ int Viewer::edit_title(string& cur_title)
 
 int Viewer::window_txtbox(string title, string info, string& input, int limit, float posX, float posY)
 {
-    sf::RenderWindow window(sf::VideoMode(700, 600), "add board", sf::Style::Default ^ sf::Style::Resize);
+    sf::RenderWindow window(sf::VideoMode(700, 600), title, sf::Style::Default ^ sf::Style::Resize);
     sf::Font font;
     font.loadFromFile("consola.ttf");
 
@@ -1823,12 +1831,166 @@ int Viewer::window_txtbox(string title, string info, string& input, int limit, f
     }
 }
 
-void Viewer::game(Game1& game)
+void Viewer::game(Game1& game, int userID)
 {
+    sf::RenderWindow window(sf::VideoMode(1200, 600), "Game: Guess Number", sf::Style::Default ^ sf::Style::Resize);
+    sf::Font font;
+    font.loadFromFile("consola.ttf");
 
-}
+    game.load_lead_board();
+    vector<sf::Text>n_leaderboard;
+    vector<sf::Text>s_leaderboard;
+    for (int i = 0; i < 5; i++) {
+        sf::Text tmp1(game.lead_board[i].first, font, 50);
+        sf::Text tmp2(to_string(game.lead_board[i].second), font, 50);
+        n_leaderboard.push_back(tmp1);
+        s_leaderboard.push_back(tmp2);
+        n_leaderboard[i].setFillColor(sf::Color::White);
+        n_leaderboard[i].setPosition({ 750, (float)(170 + 70 * i) });
+        s_leaderboard[i].setFillColor(sf::Color::White);
+        s_leaderboard[i].setPosition({ 950, (float)(170 + 70 * i) });
+    }
+    sf::Text txt_title("GUESS NUMBER", font, 70);
+    sf::Text txt_info("1 ~ 1000", font, 30);
+    sf::Text msg("Invalid", font, 35);
+    sf::Text lead("Leaderboard:", font, 50);
+    txt_title.setFillColor(sf::Color(255, 0, 127));
+    txt_title.setPosition({ 100, 70 });
+    txt_info.setFillColor(sf::Color::White);
+    txt_info.setPosition({ 100, 200 });
+    msg.setFillColor(sf::Color::Black);
+    msg.setPosition({ 270, 340 });
+    lead.setFillColor(sf::Color::White);
+    lead.setPosition({ 750, 100 });
 
-void Viewer::game_lead(Game1& game)
-{
+    Textbox txtbox_input(30, sf::Color::Black, false);
+    txtbox_input.setFont(font);
+    txtbox_input.setPos({ 100, 250 });
+    txtbox_input.setLimit(true, 4);
 
+
+    Button enter("Guess", { 130, 65 }, 30, sf::Color::White, sf::Color::Black);
+    enter.setFont(font);
+    enter.setPos({ 150, 430 });
+    Button cancel("Quit", { 130, 65 }, 30, sf::Color::White, sf::Color::Black);
+    cancel.setFont(font);
+    cancel.setPos({ 400, 430 });
+
+    game.new_answer();
+    std::cout << game.answer << endl;
+    bool endGame = false;
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+            case sf::Event::Closed:
+                window.close();
+                return;
+                break;
+            case sf::Event::TextEntered:
+                if (txtbox_input.isSel()) {
+                    txtbox_input.typedOn(event);
+                }
+                break;
+            case sf::Event::MouseMoved:
+                if (enter.isMouseOver(window)) {
+                    enter.setTxtColor(sf::Color::White);
+                    enter.setBgColor(sf::Color(0, 204, 0));
+                }
+                else if (cancel.isMouseOver(window)) {
+                    cancel.setTxtColor(sf::Color::White);
+                    cancel.setBgColor(sf::Color::Red);
+                }
+                else {
+                    enter.setTxtColor(sf::Color::Black);
+                    enter.setBgColor(sf::Color::White);
+                    cancel.setTxtColor(sf::Color::Black);
+                    cancel.setBgColor(sf::Color::White);
+                }
+                break;
+            case sf::Event::MouseButtonPressed:
+                if (!endGame && txtbox_input.isMouseOver(window)) {
+                    txtbox_input.setSelected(true);
+                }
+                else if (enter.isMouseOver(window)) {
+                    if (endGame) {
+                        endGame = false;
+                        txtbox_input.setSelected(false);
+                        enter.setText("Guess");
+                        continue;
+                    }
+                    txtbox_input.setSelected(false);
+                    string t;
+                    t = txtbox_input.getText();
+                    if (isNumber(t) && t != "") {
+                        int g = stoi(t);
+                        if (g > 0 && g <= 1000) {
+                            msg.setFillColor(sf::Color::Black);
+                            int result = game.guess(g, userID);
+                            switch (result) {
+                            case -1:
+                                msg.setString("Too Low");
+                                msg.setFillColor(sf::Color::Red);
+                                txtbox_input.pre_enter("");
+                                break;
+                            case 1:
+                                msg.setString("Too High");
+                                msg.setFillColor(sf::Color::Red);
+                                txtbox_input.pre_enter("");
+                                break;
+                            case 0:
+                                endGame = true;
+                                msg.setString("You Win");
+                                msg.setFillColor(sf::Color::Red);
+                                enter.setText("Retry");
+                                txtbox_input.pre_enter("");
+                                txtbox_input.setBoxColor(sf::Color(150, 150, 150));
+                                game.load_lead_board();
+                                for (int i = 0; i < 5; i++) {
+                                    n_leaderboard[i].setString(game.lead_board[i].first);
+                                    s_leaderboard[i].setString(to_string(game.lead_board[i].second));
+                                }
+                                game.new_answer();
+                                std::cout << game.answer << endl;
+                                break;
+                            }
+                        }
+                        else {
+                            msg.setString("Invalid");
+                            msg.setFillColor(sf::Color::Red);
+                            txtbox_input.pre_enter("");
+                        }
+                    }
+                    else {
+                        msg.setString("Invalid");
+                        msg.setFillColor(sf::Color::Red);
+                        txtbox_input.pre_enter("");
+                    }
+                }
+                else if (cancel.isMouseOver(window)) {
+                    //cout << "cancel" << endl;
+                    txtbox_input.setSelected(false);
+                    return;
+                }
+                else {
+                    txtbox_input.setSelected(false);
+                }
+                break;
+            }
+        }
+
+        window.clear();
+        for (int i = 0; i < 5; i++) {
+            window.draw(n_leaderboard[i]);
+            window.draw(s_leaderboard[i]);
+        }
+        window.draw(txt_title);
+        window.draw(txt_info);
+        window.draw(msg);
+        window.draw(lead);
+        txtbox_input.drawTo(window);
+        enter.drawTo(window);
+        cancel.drawTo(window);
+        window.display();
+    }
 }
