@@ -95,7 +95,7 @@ void BoardManager::exe() {
 			int op = viewer.board_select(boards, permission);
 			switch (op) {
 			case -1:
-				state = permission == -1 ? MENU : MENU_PERSONAL;
+				state = permission == 0 ? MENU : MENU_PERSONAL;
 				break;
 			case -2:
 				state = MENU;
@@ -203,7 +203,13 @@ void BoardManager::exe() {
 				break;
 			case -5: {
 				string reason;
-				int boxop = viewer.window_txtbox("Delete Post", "Please input the reason", reason, 28, 100, 90);
+				int boxop = 1;
+				if (current_user == return_post_author_id(current_post)) {
+					reason = "Delete by Poster";
+				}
+				else {
+					boxop = viewer.window_txtbox("Delete Post", "Please input the reason", reason, 28, 100, 90);
+				}
 				if (boxop == 1) {
 					users[current_user]->remove_post(current_post, "reason");
 					boards[current_board].load_all_post();
@@ -223,6 +229,7 @@ void BoardManager::exe() {
 			int op = viewer.view_comment(boards[current_board].all_Post, index, current_user, permission);
 			switch (op) {
 			case -1:
+				state = POST;
 				break;
 			case -100: {
 				string reason;
@@ -243,8 +250,6 @@ void BoardManager::exe() {
 		}
 	}
 }
-
-#include "BoardManager.h"
 
 void BoardManager::load_user() {
 	ifstream fin("users/count.txt");
