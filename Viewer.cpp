@@ -1043,7 +1043,7 @@ int Viewer::post_select(Board cur_board, int permission_lv)
     for (int i = 0; i < 8; i++) {
         if (i < post_amount) {
             string t;
-            if (cur_board.all_Post[i].title == "-1402834659875121315.1")
+            if (cur_board.all_Post[i].is_removed)
                 t = "Post Deleted";
             else
                 t = cur_board.all_Post[i].title;
@@ -1189,7 +1189,7 @@ int Viewer::post_select(Board cur_board, int permission_lv)
                         for (int i = 0; i < 8; i++) {
                             if (i + current < post_amount) {
                                 string t;
-                                if (cur_board.all_Post[i + current].title == "-1402834659875121315.1")
+                                if (cur_board.all_Post[i + current].is_removed)
                                     t = "Post Deleted";
                                 else
                                     t = cur_board.all_Post[i + current].title;
@@ -1210,7 +1210,7 @@ int Viewer::post_select(Board cur_board, int permission_lv)
                         for (int i = 0; i < 8; i++) {
                             if (i + current < post_amount) {
                                 string t;
-                                if (cur_board.all_Post[i + current].title == "-1402834659875121315.1")
+                                if (cur_board.all_Post[i + current].is_removed)
                                     t = "Post Deleted";
                                 else
                                     t = cur_board.all_Post[i + current].title;
@@ -1255,7 +1255,7 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
     if (authorID == userID) myPost = true;
     else myPost = false;
     string a = "Author: " + author, t = "Title: " + posts[postID].title;
-    if (posts[postID].title == "-1402834659875121315.1")
+    if (posts[postID].is_removed)
         t = "Post Deleted";
     sf::Text txt_author(a, font, 30);
     txt_author.setFillColor(sf::Color::Red);
@@ -1304,6 +1304,11 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
     Button del("Delete", { 100, 40 }, 25, sf::Color::White, sf::Color::Black);
     del.setFont(font);
     del.setPos({ 550, 40 });
+    if (posts[postID].is_removed) {
+        edit.btnOff();
+        del.btnOff();
+        comment.btnOff();
+    }
     if (myPost) {}
     else if (permission_lv == 2) {
         edit.btnOff();
@@ -1330,7 +1335,7 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
                     logout.setBgColor(sf::Color::Blue);
                     logout.setTxtColor(sf::Color::White);
                 }
-                else if (comment.isMouseOver(window)) {
+                else if (comment.isOn() && comment.isMouseOver(window)) {
                     comment.setBgColor(sf::Color(204, 102, 0));
                 }
                 else if (pgup.isMouseOver(window)) {
@@ -1368,7 +1373,7 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
                     //cout << "logout" << endl;
                     return -2;
                 }
-                if (comment.isMouseOver(window)) {
+                if (comment.isOn() && comment.isMouseOver(window)) {
                     //cout << "comment" << endl;
                     return -3;
                 }
@@ -1420,9 +1425,9 @@ int Viewer::view_post(vector<Post> posts, string author, int authorID, int postI
         window.draw(title);
         back.drawTo(window);
         logout.drawTo(window);
-        comment.drawTo(window);
         pgup.drawTo(window);
         pgdn.drawTo(window);
+        if (comment.isOn()) comment.drawTo(window);
         if (edit.isOn()) edit.drawTo(window);
         if (del.isOn()) del.drawTo(window);
         window.display();
