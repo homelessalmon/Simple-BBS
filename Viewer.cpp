@@ -483,7 +483,7 @@ int Viewer::menu2(int permission_lv)
 
 int Viewer::mailbox(vector<Mail>mails)
 {
-    sf::RenderWindow window(sf::VideoMode(700, 800), "Boards", sf::Style::Default ^ sf::Style::Resize);
+    sf::RenderWindow window(sf::VideoMode(700, 800), "Mailbox", sf::Style::Default ^ sf::Style::Resize);
     sf::Font font;
     font.loadFromFile("consola.ttf");
 
@@ -491,7 +491,7 @@ int Viewer::mailbox(vector<Mail>mails)
     title.setFont(font);
     title.setFillColor(sf::Color::Red);
     title.setCharacterSize(50);
-    title.setString("Boards");
+    title.setString("Mailbox");
     title.setPosition({ 40, 30 });
 
     //boards
