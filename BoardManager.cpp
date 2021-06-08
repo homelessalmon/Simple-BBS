@@ -117,19 +117,19 @@ void BoardManager::exe() {
 				state = MENU;
 				break;
 			case -3: {
-			//string receiver;
-			//string title;
-			//int boxop1 = viewer.window_txtbox("Receiver", "Please input receiver", receiver, 28, 200, 90);
-			//if (boxop1 == 1) {
-			//	int boxop2 = viewer.window_txtbox("Title", "Please input the title", title, 28, 200, 90);
-			//	if (boxop2 == 1) {
-			//		
+				//string receiver;
+				//string title;
+				//int boxop1 = viewer.window_txtbox("Receiver", "Please input receiver", receiver, 28, 200, 90);
+				//if (boxop1 == 1) {
+				//	int boxop2 = viewer.window_txtbox("Title", "Please input the title", title, 28, 200, 90);
+				//	if (boxop2 == 1) {
+				//		
 
-			//	}
-			//}
+				//	}
+				//}
 				state = SEND;
 				break;
-		}break;
+			}break;
 			default:
 				current_mail = op;
 				state = MAIL;
@@ -266,8 +266,8 @@ void BoardManager::exe() {
 				state = COMMENT;
 				break;
 			case -4: {
-				string title;
-				int boxop = viewer.window_txtbox("edit post", "Please input the new title", title, 28, 200, 90);
+				string title = boards[current_board].all_Post[index].title;
+				int boxop = viewer.edit_title(title);
 				if (boxop == 1) {
 					users[current_user]->edit_post_title(current_post, title);
 					users[current_user]->edit_post_content(current_post);
@@ -318,12 +318,7 @@ void BoardManager::exe() {
 			default: {
 				string reason;
 				int boxop = 1;
-				if (current_user == return_post_author_id(current_post)) {
-					reason = "Delete by Poster";
-				}
-				else {
-					boxop = viewer.window_txtbox("Delete Comment", "Please input the reason", reason, 28, 100, 90);
-				}
+				boxop = viewer.window_txtbox("Delete Comment", "Please input the reason", reason, 28, 100, 90);
 				if (boxop == 1) {
 					users[current_user]->remove_comment(current_post, op, reason);
 					boards[current_board].load_all_post();
